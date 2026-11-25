@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% block title %}Tambah Pengumuman{% endblock %}
+
+{% block content %}
+<div class="page-header fade-in fade-in-1">
+  <div class="d-flex align-items-center gap-3">
+    <a href="{{ url_for('pengumuman') }}" class="btn-icon">
+      <i class="bi bi-arrow-left"></i>
+    </a>
+    <div>
+      <h1>Tambah Pengumuman</h1>
+      <p>Buat pengumuman baru untuk anggota kelas.</p>
+    </div>
+  </div>
+</div>
+
+<div class="row justify-content-center">
+  <div class="col-lg-7">
+    <div class="glass-card p-4 fade-in fade-in-1">
+      <form method="POST" action="{{ url_for('tambah_pengumuman') }}">
+        <div class="mb-3">
+          <label class="form-label-dark">Judul Pengumuman</label>
+          <input type="text" name="judul" class="form-control-dark w-100"
+                 placeholder="Masukkan judul pengumuman" required />
+        </div>
+        <div class="mb-3">
+          <label class="form-label-dark">Isi Pengumuman</label>
+          <textarea name="isi" class="form-control-dark w-100" rows="5"
+                    placeholder="Tulis isi pengumuman di sini..." required
+                    style="resize:vertical;"></textarea>
+        </div>
+        <div class="mb-4 d-flex align-items-center gap-3">
+          <label class="d-flex align-items-center gap-2" style="cursor:pointer;">
+            <input type="checkbox" name="penting" id="pentingCb"
+                   style="width:18px;height:18px;accent-color:var(--warning);cursor:pointer;" />
+            <span style="font-size:0.85rem;color:var(--text-secondary);">
+              <i class="bi bi-exclamation-circle me-1" style="color:var(--warning);"></i>
+              Tandai sebagai pengumuman penting
+            </span>
+          </label>
+        </div>
+        <div class="d-flex gap-3">
+          <button type="submit" class="btn-primary-custom flex-fill d-flex align-items-center justify-content-center gap-2">
+            <i class="bi bi-send"></i> Publikasikan
+          </button>
+          <a href="{{ url_for('pengumuman') }}" class="btn-ghost">Batal</a>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

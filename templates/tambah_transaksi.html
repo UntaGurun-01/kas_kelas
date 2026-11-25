@@ -1,0 +1,120 @@
+{% extends 'base.html' %}
+{% block title %}Tambah Transaksi{% endblock %}
+
+{% block content %}
+<div class="page-header fade-in fade-in-1">
+  <div class="d-flex align-items-center gap-3">
+    <a href="{{ url_for('transaksi') }}" class="btn-icon">
+      <i class="bi bi-arrow-left"></i>
+    </a>
+    <div>
+      <h1>Tambah Transaksi</h1>
+      <p>Catat pemasukan atau pengeluaran kas kelas.</p>
+    </div>
+  </div>
+</div>
+
+<div class="row justify-content-center">
+  <div class="col-lg-7">
+    <div class="glass-card p-4 fade-in fade-in-1">
+      <form method="POST" action="{{ url_for('tambah_transaksi') }}" id="txForm">
+
+        <!-- Jenis -->
+        <div class="mb-4">
+          <label class="form-label-dark">Jenis Transaksi</label>
+          <div class="d-flex gap-3">
+            <label class="flex-fill" style="cursor:pointer;">
+              <input type="radio" name="jenis" value="pemasukan" id="jenisMasuk" style="display:none;" required />
+              <div class="jenis-btn" id="btnMasuk"
+                   style="background:rgba(16,185,129,0.1);border:2px solid rgba(16,185,129,0.3);
+                          border-radius:12px;padding:14px;text-align:center;transition:all 0.2s;cursor:pointer;"
+                   onclick="selectJenis('pemasukan')">
+                <i class="bi bi-arrow-up-circle" style="font-size:1.4rem;color:#10b981;display:block;margin-bottom:6px;"></i>
+                <span style="font-size:0.82rem;font-weight:600;color:#10b981;">Pemasukan</span>
+              </div>
+            </label>
+            <label class="flex-fill" style="cursor:pointer;">
+              <input type="radio" name="jenis" value="pengeluaran" id="jenisKeluar" style="display:none;" />
+              <div class="jenis-btn" id="btnKeluar"
+                   style="background:rgba(255,255,255,0.03);border:2px solid rgba(255,255,255,0.08);
+                          border-radius:12px;padding:14px;text-align:center;transition:all 0.2s;cursor:pointer;"
+                   onclick="selectJenis('pengeluaran')">
+                <i class="bi bi-arrow-down-circle" style="font-size:1.4rem;color:#fc8181;display:block;margin-bottom:6px;"></i>
+                <span style="font-size:0.82rem;font-weight:600;color:#fc8181;">Pengeluaran</span>
+              </div>
+            </label>
+          </div>
+        </div>
+
+        <div class="row g-3">
+          <div class="col-12">
+            <label class="form-label-dark">Keterangan</label>
+            <input type="text" name="keterangan" class="form-control-dark w-100"
+                   placeholder="Contoh: Iuran bulan Oktober - Budi" required />
+          </div>
+          <div class="col-sm-6">
+            <label class="form-label-dark">Jumlah (Rp)</label>
+            <input type="number" name="jumlah" class="form-control-dark w-100"
+                   placeholder="50000" min="1000" step="1000" required />
+          </div>
+          <div class="col-sm-6">
+            <label class="form-label-dark">Tanggal</label>
+            <input type="date" name="tanggal" class="form-control-dark w-100"
+                   value="{{ now }}" required id="txDate" />
+          </div>
+          <div class="col-12">
+            <label class="form-label-dark">Kategori</label>
+            <select name="kategori" class="form-select-dark w-100" required>
+              <option value="">— Pilih Kategori —</option>
+              <option value="Iuran">Iuran Bulanan</option>
+              <option value="ATK">ATK & Perlengkapan</option>
+              <option value="Dekorasi">Dekorasi Kelas</option>
+              <option value="Kebersihan">Kebersihan</option>
+              <option value="Kegiatan">Kegiatan Kelas</option>
+              <option value="Lainnya">Lainnya</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="d-flex gap-3 mt-4">
+          <button type="submit" class="btn-primary-custom flex-fill d-flex align-items-center justify-content-center gap-2">
+            <i class="bi bi-save"></i> Simpan Transaksi
+          </button>
+          <a href="{{ url_for('transaksi') }}" class="btn-ghost">Batal</a>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+// Set default date to today
+document.getElementById('txDate').value = new Date().toISOString().split('T')[0];
+
+// Select jenis
+function selectJenis(jenis) {
+  const btnMasuk = document.getElementById('btnMasuk');
+  const btnKeluar = document.getElementById('btnKeluar');
+  if (jenis === 'pemasukan') {
+    document.getElementById('jenisMasuk').checked = true;
+    btnMasuk.style.background = 'rgba(16,185,129,0.15)';
+    btnMasuk.style.borderColor = 'rgba(16,185,129,0.6)';
+    btnKeluar.style.background = 'rgba(255,255,255,0.03)';
+    btnKeluar.style.borderColor = 'rgba(255,255,255,0.08)';
+  } else {
+    document.getElementById('jenisKeluar').checked = true;
+    btnKeluar.style.background = 'rgba(248,81,73,0.12)';
+    btnKeluar.style.borderColor = 'rgba(248,81,73,0.5)';
+    btnMasuk.style.background = 'rgba(255,255,255,0.03)';
+    btnMasuk.style.borderColor = 'rgba(255,255,255,0.08)';
+  }
+}
+
+// Format number input
+document.querySelector('[name=jumlah]').addEventListener('blur', function() {
+  this.value = Math.round(this.value / 1000) * 1000 || this.value;
+});
+</script>
+{% endblock %}

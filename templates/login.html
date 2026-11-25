@@ -1,0 +1,114 @@
+{% extends 'base.html' %}
+{% block title %}Login Portal Kas Kelas{% endblock %}
+
+{% block auth_content %}
+<div class="login-page">
+  <!-- Tombol Ganti Tema Mengambang -->
+  <button type="button" onclick="toggleTheme()" class="login-theme-toggle" id="themeToggleBtn" title="Ganti Tema">
+    <i class="bi bi-sun" id="themeIcon"></i>
+  </button>
+
+  <div class="login-card">
+
+    <!-- Logo & Brand Header -->
+    <div class="text-center mb-4">
+      <div class="d-inline-flex align-items-center justify-content-center login-brand-icon"
+           style="width:58px;height:58px;background:linear-gradient(135deg,#10b981,#059669);border-radius:18px;margin-bottom:14px;box-shadow:0 8px 24px rgba(16,185,129,0.35);">
+        <i class="bi bi-wallet2 text-white" style="font-size:1.65rem;"></i>
+      </div>
+      <h1 class="login-title">Kas-Kelas</h1>
+      <p class="login-subtitle">Portal Siswa & Anggota Kelas</p>
+    </div>
+
+    <!-- Flash messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="alert alert-{{ category }} glass-alert mb-3" role="alert" style="font-size:0.85rem;">
+            <i class="bi bi-{{ 'check-circle' if category == 'success' else 'x-circle' if category == 'danger' else 'info-circle' }} me-2"></i>
+            {{ message }}
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <form method="POST" action="{{ url_for('login') }}" id="loginForm">
+      <!-- Input Nama Lengkap -->
+      <div class="mb-3">
+        <label class="form-label-dark" for="namaInput">Username</label>
+        <div style="position:relative;">
+          <i class="bi bi-person input-icon" style="position:absolute;left:14px;top:50%;transform:translateY(-50%);"></i>
+          <input type="text" name="nama" id="namaInput" class="form-control-dark w-100"
+                 placeholder="Username"
+                 style="padding-left:40px !important;" required autofocus />
+        </div>
+      </div>
+
+      <!-- Input Password -->
+      <div class="mb-4">
+        <label class="form-label-dark" for="nimInput">Password</label>
+        <div style="position:relative;">
+          <i class="bi bi-card-text input-icon" style="position:absolute;left:14px;top:50%;transform:translateY(-50%);"></i>
+          <input type="text" name="nim" id="nimInput" class="form-control-dark w-100"
+                 placeholder="Password"
+                 style="padding-left:40px !important;padding-right:42px !important;" required />
+          <button type="button" onclick="toggleNimVisibility()" class="btn-eye-toggle"
+                  style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;"
+                  title="Sembunyikan/Tampilkan NIM">
+            <i class="bi bi-eye" id="eyeIcon"></i>
+          </button>
+        </div>
+      </div>
+
+      <button type="submit" class="btn-primary-custom btn-login-submit w-100 d-flex align-items-center justify-content-center gap-2" id="btnLoginSubmit">
+        <i class="bi bi-box-arrow-in-right btn-icon-arrow"></i> Masuk
+      </button>
+
+      <div class="text-center mt-3 login-info-text">
+        <i class="bi bi-shield-check me-1" style="color:#10b981;"></i>
+        Login divalidasi langsung dari data anggota resmi kelas.
+      </div>
+    </form>
+
+    <p class="text-center mt-4 mb-0 login-footer-text">
+      Kas-Kelas v1.0.0
+    </p>
+  </div>
+</div>
+
+<script>
+function toggleNimVisibility() {
+  const inp = document.getElementById('nimInput');
+  const icon = document.getElementById('eyeIcon');
+  if (inp.type === 'text') {
+    inp.type = 'password';
+    icon.className = 'bi bi-eye-slash';
+  } else {
+    inp.type = 'text';
+    icon.className = 'bi bi-eye';
+  }
+}
+
+// Inisialisasi ikon tema di login page sesuai tema aktif
+(function() {
+  const currentTheme = document.documentElement.getAttribute('data-theme') || localStorage.getItem('theme') || 'dark';
+  const icon = document.getElementById('themeIcon');
+  const btn = document.getElementById('themeToggleBtn');
+  if (icon) {
+    if (currentTheme === 'dark') {
+      icon.className = 'bi bi-sun';
+      if (btn) btn.setAttribute('title', 'Beralih ke Mode Terang');
+    } else {
+      icon.className = 'bi bi-moon-stars';
+      if (btn) btn.setAttribute('title', 'Beralih ke Mode Gelap');
+    }
+  }
+
+  // Dukungan preview pengujian animasi hover jika parameter ?hover=1 aktif
+  if (new URLSearchParams(window.location.search).get('hover') === '1') {
+    const loginBtn = document.getElementById('btnLoginSubmit');
+    if (loginBtn) loginBtn.classList.add('hover-test');
+  }
+})();
+</script>
+{% endblock %}

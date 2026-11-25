@@ -1,0 +1,115 @@
+{% extends 'base.html' %}
+{% block title %}Transaksi{% endblock %}
+
+{% block content %}
+<div class="page-header fade-in fade-in-1">
+  <div class="d-flex justify-content-between align-items-start flex-wrap gap-3">
+    <div>
+      <h1>Transaksi</h1>
+      <p>Semua catatan transaksi kas kelas.</p>
+    </div>
+    {% if session['user']['role'] == 'admin' %}
+    <a href="{{ url_for('tambah_transaksi') }}" class="btn-primary-custom d-flex align-items-center gap-2">
+      <i class="bi bi-plus-lg"></i> Tambah Transaksi
+    </a>
+    {% endif %}
+  </div>
+</div>
+
+<!-- Summary Row -->
+<div class="row g-3 mb-4">
+  <div class="col-sm-4 fade-in fade-in-1">
+    <div class="stat-card green p-3">
+      <div class="stat-label">Saldo Saat Ini</div>
+      <div class="stat-value" style="font-size:1.2rem;">
+        Rp {{ "{:,.0f}".format(stats.saldo).replace(",",".") }}
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-4 fade-in fade-in-2">
+    <div class="stat-card blue p-3">
+      <div class="stat-label">Total Pemasukan</div>
+      <div class="stat-value" style="font-size:1.2rem;">
+        Rp {{ "{:,.0f}".format(stats.total_pemasukan).replace(",",".") }}
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-4 fade-in fade-in-3">
+    <div class="stat-card red p-3">
+      <div class="stat-label">Total Pengeluaran</div>
+      <div class="stat-value" style="font-size:1.2rem;">
+        Rp {{ "{:,.0f}".format(stats.total_pengeluaran).replace(",",".") }}
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Filter -->
+<div class="d-flex align-items-center gap-3 mb-4 fade-in fade-in-1">
+  <div class="filter-tabs">
+    <a href="{{ url_for('transaksi', jenis='semua') }}"
+       class="filter-tab {% if filter_jenis == 'semua' %}active{% endif %}">Semua</a>
+    <a href="{{ url_for('transaksi', jenis='pemasukan') }}"
+       class="filter-tab {% if filter_jenis == 'pemasukan' %}active{% endif %}">Pemasukan</a>
+    <a href="{{ url_for('transaksi', jenis='pengeluaran') }}"
+       class="filter-tab {% if filter_jenis == 'pengeluaran' %}active{% endif %}">Pengeluaran</a>
+  </div>
+</div>
+
+<!-- Table -->
+<div class="glass-card fade-in fade-in-2">
+  <div class="p-4 border-bottom" style="border-color:var(--border)!important;">
+    <div class="section-title">Daftar Transaksi</div>
+  </div>
+  {% if data %}
+  <div class="table-responsive">
+    <table class="table table-custom mb-0">
+      <thead>
+        <tr>
+          <th>Tanggal</th>
+          <th>Keterangan</th>
+          <th>Kategori</th>
+          <th>Jenis</th>
+          <th class="text-end">Jumlah</th>
+          <th class="text-end">Saldo</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for t in data %}
+        <tr>
+          <td style="color:var(--text-secondary);white-space:nowrap;">
+            <i class="bi bi-calendar3 me-1" style="font-size:0.75rem;"></i>{{ t.tanggal }}
+          </td>
+          <td style="font-weight:500;max-width:220px;">{{ t.keterangan }}</td>
+          <td>
+            <span class="custom-badge"
+              style="background:rgba(255,255,255,0.06);color:var(--text-secondary);border:1px solid var(--border);">
+              {{ t.kategori }}
+            </span>
+          </td>
+          <td>
+            <span class="custom-badge {% if t.jenis == 'pemasukan' %}badge-masuk{% else %}badge-keluar{% endif %}">
+              <i class="bi bi-arrow-{{ 'up' if t.jenis == 'pemasukan' else 'down' }} me-1"></i>
+              {{ t.jenis|capitalize }}
+            </span>
+          </td>
+          <td class="text-end fw-semibold {% if t.jenis == 'pemasukan' %}text-success{% else %}text-danger{% endif %}">
+            {{ '+' if t.jenis == 'pemasukan' else '-' }}Rp {{ "{:,.0f}".format(t.jumlah).replace(",",".") }}
+          </td>
+          <td class="text-end" style="color:var(--text-secondary);font-size:0.8rem;">
+            Rp {{ "{:,.0f}".format(t.saldo).replace(",",".") }}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <div class="empty-state">
+    <i class="bi bi-receipt"></i>
+    <div class="empty-title">Belum ada transaksi</div>
+    <div class="empty-sub">Transaksi akan muncul di sini setelah ditambahkan.</div>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

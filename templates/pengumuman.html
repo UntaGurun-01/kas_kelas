@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+{% block title %}Pengumuman{% endblock %}
+
+{% block content %}
+<div class="page-header fade-in fade-in-1">
+  <div class="d-flex justify-content-between align-items-start flex-wrap gap-3">
+    <div>
+      <h1>Pengumuman</h1>
+      <p>Informasi dan pemberitahuan terbaru dari pengelola kas kelas.</p>
+    </div>
+    {% if session['user']['role'] == 'admin' %}
+    <a href="{{ url_for('tambah_pengumuman') }}" class="btn-primary-custom d-flex align-items-center gap-2">
+      <i class="bi bi-plus-lg"></i> Tambah Pengumuman
+    </a>
+    {% endif %}
+  </div>
+</div>
+
+<div class="row g-3">
+  {% if data %}
+    {% for p in data %}
+    <div class="col-12 fade-in fade-in-{{ loop.index if loop.index <= 4 else 4 }}">
+      <div class="announcement-card {{ 'important' if p.penting else '' }}">
+        <div class="d-flex justify-content-between align-items-start gap-3">
+          <div class="flex-fill">
+            <div class="d-flex align-items-center gap-2 mb-2">
+              {% if p.penting %}
+              <span class="custom-badge" style="background:rgba(210,153,34,0.15);color:#d29922;border:1px solid rgba(210,153,34,0.3);">
+                <i class="bi bi-exclamation-circle me-1"></i>Penting
+              </span>
+              {% endif %}
+              <span style="font-size:0.73rem;color:var(--text-muted);">{{ p.tanggal }}</span>
+            </div>
+            <h3 style="font-size:0.95rem;font-weight:700;color:var(--text-primary);margin:0 0 8px;">
+              {{ p.judul }}
+            </h3>
+            <p style="font-size:0.85rem;color:var(--text-secondary);margin:0;line-height:1.6;">
+              {{ p.isi }}
+            </p>
+          </div>
+          <div style="flex-shrink:0;">
+            <div class="d-flex align-items-center gap-2">
+              <div class="avatar-sm">{{ p.penulis[0] }}</div>
+              <span style="font-size:0.75rem;color:var(--text-muted);">{{ p.penulis }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  {% else %}
+  <div class="col-12">
+    <div class="glass-card">
+      <div class="empty-state">
+        <i class="bi bi-megaphone"></i>
+        <div class="empty-title">Belum ada pengumuman</div>
+        <div class="empty-sub">Pengumuman akan muncul di sini.</div>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

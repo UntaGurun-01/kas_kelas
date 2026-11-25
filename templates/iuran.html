@@ -1,0 +1,225 @@
+{% extends 'base.html' %}
+{% block title %}Iuran Saya{% endblock %}
+
+{% block content %}
+<div class="page-header fade-in fade-in-1">
+  <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+    <div>
+      <h1 class="h3 fw-bold mb-1 text-white">Iuran Saya</h1>
+      <p style="color:#cbd5e1;font-size:0.88rem;margin-bottom:0;">Riwayat dan status pembayaran iuran kas kelas Anda.</p>
+    </div>
+    <button class="btn btn-primary d-flex align-items-center gap-2" data-bs-toggle="modal" data-bs-target="#modalBayarIuran" style="border-radius:10px;padding:8px 20px;">
+      <i class="bi bi-wallet2"></i> Bayar Kas Sekarang
+    </button>
+  </div>
+</div>
+
+<!-- Summary Cards -->
+<div class="row g-3 mb-4">
+  <div class="col-sm-4 fade-in fade-in-1">
+    <div class="stat-card green">
+      <div class="stat-icon green mb-2"><i class="bi bi-check-circle"></i></div>
+      <div class="stat-label">Sudah Lunas</div>
+      <div class="stat-value">{{ lunas }} Bulan</div>
+    </div>
+  </div>
+  <div class="col-sm-4 fade-in fade-in-2">
+    <div class="stat-card red">
+      <div class="stat-icon red mb-2"><i class="bi bi-clock"></i></div>
+      <div class="stat-label">Belum Lunas</div>
+      <div class="stat-value">{{ belum }} Bulan</div>
+    </div>
+  </div>
+  <div class="col-sm-4 fade-in fade-in-3">
+    <div class="stat-card blue">
+      <div class="stat-icon blue mb-2"><i class="bi bi-cash"></i></div>
+      <div class="stat-label">Total Dibayar</div>
+      <div class="stat-value" style="font-size:1.2rem;">
+        Rp {{ "{:,.0f}".format(total_dibayar).replace(",",".") }}
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Progress -->
+{% if data %}
+<div class="glass-card p-4 mb-4 fade-in fade-in-1">
+  <div class="d-flex justify-content-between align-items-center mb-2">
+    <span class="section-title" style="font-size:0.875rem;">Progres Pembayaran</span>
+    <span style="font-size:0.8rem;color:var(--primary);font-weight:600;">{{ lunas }}/{{ data|length }} Bulan Lunas</span>
+  </div>
+  <div class="progress-custom">
+    <div class="progress-fill" style="width:{{ (lunas / data|length * 100)|round|int if data else 0 }}%;"></div>
+  </div>
+</div>
+{% endif %}
+
+<!-- Table -->
+<div class="glass-card p-4 fade-in fade-in-2">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <div class="section-title mb-0">Detail Iuran</div>
+    <span style="font-size:0.8rem;color:#cbd5e1;">Iuran Wajib: Rp {{ "{:,.0f}".format(kelas.iuran_bulanan|int if kelas else 5000).replace(",",".") }} / Bulan</span>
+  </div>
+  {% if data %}
+  <div class="table-responsive">
+    <table class="table table-custom mb-0">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Bulan</th>
+          <th>Nominal</th>
+          <th>Status</th>
+          <th>Tanggal Bayar</th>
+          <th>Aksi</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in data %}
+        <tr>
+          <td style="color:#94a3b8;">{{ loop.index }}</td>
+          <td style="font-weight:600;color:#fff;">{{ item.bulan }}</td>
+          <td style="color:#fff;">Rp {{ "{:,.0f}".format(item.jumlah).replace(",",".") }}</td>
+          <td>
+            <span class="custom-badge {% if item.status == 'Lunas' %}badge-lunas{% else %}badge-belum{% endif %}">
+              <i class="bi bi-{{ 'check-circle-fill' if item.status == 'Lunas' else 'clock' }} me-1"></i>
+              {{ item.status }}
+            </span>
+          </td>
+          <td style="color:#cbd5e1;">
+            {% if item.tanggal_bayar %}
+              <i class="bi bi-calendar3 me-1" style="font-size:0.8rem;"></i>{{ item.tanggal_bayar }}
+            {% else %}
+              <span style="color:#64748b;">—</span>
+            {% endif %}
+          </td>
+          <td>
+            {% if item.status == 'Belum Lunas' %}
+              <button class="btn btn-sm btn-outline-success py-1 px-2" data-bs-toggle="modal" data-bs-target="#modalBayarIuran" style="font-size:0.75rem;border-radius:6px;">
+                <i class="bi bi-wallet2 me-1"></i> Bayar
+              </button>
+            {% else %}
+              <span class="text-success" style="font-size:0.78rem;"><i class="bi bi-check2-all"></i> Terverifikasi</span>
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <div class="empty-state">
+    <i class="bi bi-cash-coin"></i>
+    <div class="empty-title">Belum ada data iuran</div>
+    <div class="empty-sub" style="color:#94a3b8;">Data iuran Anda akan muncul di sini.</div>
+  </div>
+  {% endif %}
+</div>
+
+<!-- ── MODAL BAYAR IURAN KAS DENGAN E-WALLET AKTIF ─────────────── -->
+<div class="modal fade" id="modalBayarIuran" tabindex="-1" aria-labelledby="modalBayarIuranLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content modal-content-dark">
+      <div class="modal-header border-bottom border-gray-800">
+        <h5 class="modal-title fw-bold text-white d-flex align-items-center gap-2" id="modalBayarIuranLabel">
+          <i class="bi bi-wallet2 text-primary"></i> Pembayaran Kas via E-Wallet Aktif
+        </h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body p-4">
+        <div class="text-center mb-3">
+          <div style="color:#94a3b8;font-size:0.8rem;">Nominal Iuran Wajib:</div>
+          <div class="fw-bold text-success" style="font-size:1.6rem;">Rp 5.000 <small style="font-size:0.8rem;color:#cbd5e1;">/ Bulan</small></div>
+        </div>
+
+        <p style="color:#cbd5e1;font-size:0.82rem;margin-bottom:12px;">Pilih salah satu metode e-wallet resmi kas kelas di bawah ini:</p>
+
+        <!-- DANA -->
+        <div class="p-3 rounded-3 mb-2 d-flex align-items-center justify-content-between" style="background:rgba(17,142,234,0.1);border:1px solid rgba(17,142,234,0.3);">
+          <div class="d-flex align-items-center gap-2">
+            <div class="ewallet-logo-box sm">
+              <img src="{{ url_for('static', filename='img/ewallet/dana.png') }}" alt="Logo DANA" class="ewallet-logo-img">
+            </div>
+            <div>
+              <div class="fw-bold text-white" style="font-size:0.9rem;">DANA: {{ kelas.no_dana if kelas and kelas.no_dana else '+62123456' }}</div>
+              <small style="color:#38bdf8;font-size:0.75rem;">a.n. {{ kelas.an_dana if kelas and kelas.an_dana else 'Bendahara Kelas' }}</small>
+            </div>
+          </div>
+          <button class="btn btn-sm btn-outline-info" data-nomor="{{ kelas.no_dana if kelas and kelas.no_dana else '+62123456' }}" onclick="salinNomor(this.dataset.nomor, 'DANA')" style="font-size:0.75rem;">
+            Salin
+          </button>
+        </div>
+
+        <!-- GOPAY -->
+        {% if kelas and kelas.no_gopay %}
+        <div class="p-3 rounded-3 mb-2 d-flex align-items-center justify-content-between" style="background:rgba(0,174,214,0.1);border:1px solid rgba(0,174,214,0.3);">
+          <div class="d-flex align-items-center gap-2">
+            <div class="ewallet-logo-box sm">
+              <img src="{{ url_for('static', filename='img/ewallet/gopay.png') }}" alt="Logo GoPay" class="ewallet-logo-img">
+            </div>
+            <div>
+              <div class="fw-bold text-white" style="font-size:0.9rem;">GoPay: {{ kelas.no_gopay }}</div>
+              <small style="color:#38bdf8;font-size:0.75rem;">a.n. {{ kelas.an_gopay if kelas and kelas.an_gopay else 'Bendahara Kelas' }}</small>
+            </div>
+          </div>
+          <button class="btn btn-sm btn-outline-info" data-nomor="{{ kelas.no_gopay }}" onclick="salinNomor(this.dataset.nomor, 'GoPay')" style="font-size:0.75rem;">
+            Salin
+          </button>
+        </div>
+        {% endif %}
+
+        <!-- OVO -->
+        {% if kelas and kelas.no_ovo %}
+        <div class="p-3 rounded-3 mb-2 d-flex align-items-center justify-content-between" style="background:rgba(76,52,148,0.12);border:1px solid rgba(147,51,234,0.3);">
+          <div class="d-flex align-items-center gap-2">
+            <div class="ewallet-logo-box sm">
+              <img src="{{ url_for('static', filename='img/ewallet/ovo.png') }}" alt="Logo OVO" class="ewallet-logo-img">
+            </div>
+            <div>
+              <div class="fw-bold text-white" style="font-size:0.9rem;">OVO: {{ kelas.no_ovo }}</div>
+              <small style="color:#c084fc;font-size:0.75rem;">a.n. {{ kelas.an_ovo if kelas and kelas.an_ovo else 'Bendahara Kelas' }}</small>
+            </div>
+          </div>
+          <button class="btn btn-sm btn-outline-info" data-nomor="{{ kelas.no_ovo }}" onclick="salinNomor(this.dataset.nomor, 'OVO')" style="font-size:0.75rem;">
+            Salin
+          </button>
+        </div>
+        {% endif %}
+
+        <!-- BRIMO -->
+        {% if kelas and kelas.no_brimo %}
+        <div class="p-3 rounded-3 mb-2 d-flex align-items-center justify-content-between" style="background:rgba(0,82,156,0.12);border:1px solid rgba(2,132,199,0.3);">
+          <div class="d-flex align-items-center gap-2">
+            <div class="ewallet-logo-box sm">
+              <img src="{{ url_for('static', filename='img/ewallet/brimo.png') }}" alt="Logo BRImo" class="ewallet-logo-img">
+            </div>
+            <div>
+              <div class="fw-bold text-white" style="font-size:0.9rem;">BRImo: {{ kelas.no_brimo }}</div>
+              <small style="color:#38bdf8;font-size:0.75rem;">a.n. {{ kelas.an_brimo if kelas and kelas.an_brimo else 'Kas Kelas 2024' }}</small>
+            </div>
+          </div>
+          <button class="btn btn-sm btn-outline-info" data-nomor="{{ kelas.no_brimo }}" onclick="salinNomor(this.dataset.nomor, 'Rekening BRImo')" style="font-size:0.75rem;">
+            Salin
+          </button>
+        </div>
+        {% endif %}
+
+        <div class="p-3 rounded-3 mt-3" style="background:#0d1117;border:1px solid rgba(255,255,255,0.08);font-size:0.78rem;color:#cbd5e1;">
+          <i class="bi bi-info-circle text-info me-1"></i> Setelah melakukan transfer, silakan kirimkan bukti transfer / screenshot ke grup WhatsApp kelas atau hubungi bendahara.
+        </div>
+      </div>
+      <div class="modal-footer border-top border-gray-800">
+        <button type="button" class="btn btn-secondary w-100" data-bs-dismiss="modal">Tutup</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function salinNomor(nomor, jenis) {
+  if (nomor) {
+    navigator.clipboard.writeText(nomor);
+    alert('Nomor ' + jenis + ' berhasil disalin!');
+  }
+}
+</script>
+{% endblock %}

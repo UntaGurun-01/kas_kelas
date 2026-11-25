@@ -1,0 +1,417 @@
+{% extends 'base.html' %}
+{% block title %}Tentang Website Kas-Kelas{% endblock %}
+
+{% block content %}
+<!-- ── HERO HEADER ──────────────────────────────────────────────── -->
+<div class="topbar-hero fade-in fade-in-1 mb-4 position-relative overflow-hidden tentang-hero"
+     style="border-radius:20px;padding:36px 32px;">
+  <div class="row align-items-center g-4">
+    <div class="col-lg-8">
+      <div class="d-flex align-items-center gap-2 mb-2">
+        <span class="custom-badge badge-lunas" style="font-size:0.75rem;padding:4px 12px;">
+          <i class="bi bi-patch-check-fill me-1"></i> Versi Resmi 1.0.0
+        </span>
+      </div>
+      <h1 class="display-6 fw-bold mb-2 tentang-heading">
+        Tentang Sistem Kas-Kelas
+      </h1>
+      <p class="tentang-subtext mb-0" style="font-size:0.95rem;max-width:650px;line-height:1.6;">
+        Platform manajemen keuangan kas kelas yang modern, transparan, dan terintegrasi secara digital.
+      </p>
+    </div>
+    <div class="col-lg-4 text-lg-end text-start">
+      <div class="d-inline-flex flex-column align-items-lg-end">
+        <div class="d-flex align-items-center gap-2 mb-1">
+          <div style="width:10px;height:10px;border-radius:50%;background:#10b981;animation:pulse 2s infinite;"></div>
+          <span class="fw-bold tentang-heading" style="font-size:0.9rem;">Sistem Aktif &amp; Terhubung</span>
+        </div>
+        <small class="text-muted" style="font-size:0.78rem;">Database MySQL Bersama • Cloud Ready</small>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── DESKRIPSI LENGKAP TENTANG WEBSITE ────────────────────────── -->
+<div class="row g-4 mb-4">
+  <div class="col-lg-7 fade-in fade-in-2">
+    <div class="glass-card p-4 h-100">
+      <div class="section-title mb-3 d-flex align-items-center gap-2">
+        <i class="bi bi-journal-text text-primary"></i> Deskripsi &amp; Tujuan Sistem
+      </div>
+      <p class="tentang-body-text" style="font-size:0.88rem;line-height:1.7;">
+        <strong class="tentang-heading">Sistem Kas-Kelas</strong> diciptakan sebagai transformasi digital dari pembukuan kas kelas konvensional yang sebelumnya dicatat manual di buku atau lembaran kertas yang rawan hilang dan sulit diakses bersama.
+      </p>
+      <p class="tentang-body-text" style="font-size:0.88rem;line-height:1.7;">
+        Dengan sistem ini, seluruh mahasiswa kelas dapat memantau secara mandiri:
+      </p>
+
+      <div class="row g-3 my-2">
+        <div class="col-sm-6">
+          <div class="p-3 rounded-3 tentang-feature-box">
+            <div class="fw-bold tentang-heading mb-1" style="font-size:0.88rem;">
+              <i class="bi bi-eye-fill text-success me-1"></i> Transparansi 100%
+            </div>
+            <div class="tentang-body-text" style="font-size:0.78rem;">
+              Setiap rupiah pemasukan dan pengeluaran kas tercatat rapi dan bisa diaudit oleh siapa pun secara real-time.
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-6">
+          <div class="p-3 rounded-3 tentang-feature-box">
+            <div class="fw-bold tentang-heading mb-1" style="font-size:0.88rem;">
+              <i class="bi bi-wallet-fill text-info me-1"></i> Multi E-Wallet
+            </div>
+            <div class="tentang-body-text" style="font-size:0.78rem;">
+              Mendukung pembayaran langsung ke e-wallet kelas (DANA, GoPay, OVO, dan transfer bank BRImo).
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-6">
+          <div class="p-3 rounded-3 tentang-feature-box">
+            <div class="fw-bold tentang-heading mb-1" style="font-size:0.88rem;">
+              <i class="bi bi-fingerprint text-warning me-1"></i> Akses Berbasis NIM
+            </div>
+            <div class="tentang-body-text" style="font-size:0.78rem;">
+              Siswa angkatan 2024 dapat masuk dengan mudah menggunakan nama dan awalan NIM 24 masing-masing.
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-6">
+          <div class="p-3 rounded-3 tentang-feature-box">
+            <div class="fw-bold tentang-heading mb-1" style="font-size:0.88rem;">
+              <i class="bi bi-music-note-beamed text-primary me-1"></i> Audio &amp; Kustomisasi
+            </div>
+            <div class="tentang-body-text" style="font-size:0.78rem;">
+              Foto profil, preferensi tema gelap/terang, dan nada notifikasi MP3 dari perangkat pengguna.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Statistik Singkat Kelas -->
+  <div class="col-lg-5 fade-in fade-in-2">
+    <div class="glass-card p-4 h-100">
+      <div class="section-title mb-3 d-flex align-items-center gap-2">
+        <i class="bi bi-pie-chart text-primary"></i> Data Kelas Aktif
+      </div>
+
+      <div class="d-flex flex-column gap-3">
+        <div class="d-flex justify-content-between align-items-center p-3 rounded-3 tentang-data-row">
+          <div>
+            <div class="tentang-label" style="font-size:0.75rem;">Nama Kelas &amp; Jurusan:</div>
+            <div class="fw-bold tentang-heading" style="font-size:0.95rem;">Kelas {{ kelas.nama_kelas if kelas else 'B' }} • {{ kelas.jurusan if kelas else 'Teknik Informatika' }}</div>
+          </div>
+          <span class="badge bg-primary" style="font-size:0.75rem;">Aktif</span>
+        </div>
+
+        <div class="d-flex justify-content-between align-items-center p-3 rounded-3 tentang-data-row">
+          <div>
+            <div class="tentang-label" style="font-size:0.75rem;">Angkatan Kuliah:</div>
+            <div class="fw-bold tentang-heading" style="font-size:0.95rem;">2024 / Awalan NIM 24</div>
+          </div>
+          <span class="badge bg-secondary" style="font-size:0.75rem;">Tahun 1</span>
+        </div>
+
+        <div class="d-flex justify-content-between align-items-center p-3 rounded-3 tentang-data-row">
+          <div>
+            <div class="tentang-label" style="font-size:0.75rem;">Total Anggota Terdaftar:</div>
+            <div class="fw-bold text-success" style="font-size:1.1rem;">{{ jumlah_anggota }} Mahasiswa</div>
+          </div>
+          <i class="bi bi-people-fill text-muted" style="font-size:1.4rem;"></i>
+        </div>
+
+        <div class="d-flex justify-content-between align-items-center p-3 rounded-3 tentang-data-row">
+          <div>
+            <div class="tentang-label" style="font-size:0.75rem;">Iuran Wajib Per Bulan:</div>
+            <div class="fw-bold tentang-heading" style="font-size:0.95rem;">Rp {{ "{:,.0f}".format(kelas.iuran_bulanan|int if kelas else 5000).replace(",",".") }} / Mahasiswa</div>
+          </div>
+          <i class="bi bi-cash-stack text-muted" style="font-size:1.4rem;"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── Tim Pengembang ────────────────── -->
+<div class="fade-in fade-in-3 mb-4">
+  <div class="section-title mb-1 d-flex align-items-center gap-2">
+    <i class="bi bi-people-fill text-primary"></i>Tim Pengembang</div>
+  <p class="tentang-body-text mb-4" style="font-size:0.85rem;">
+  Individu di balik perancangan dan pengembangan Kas-Kelas, yang mengintegrasikan keahlian rekayasa perangkat lunak, desain pengalaman pengguna, dan pengujian keamanan untuk menghadirkan solusi pengelolaan kas kelas yang efektif dan transparan.
+  </p>
+
+  <div class="row g-4">
+    <!-- 1. LEAD DEVELOPER & INISIATOR: AGAM AL HAKIM HASIBUAN -->
+    <div class="col-lg-6">
+      <div class="glass-card p-4 h-100 position-relative overflow-hidden d-flex flex-column justify-content-between tentang-dev-card tentang-dev-agam">
+        <div>
+          <div class="d-flex align-items-center gap-3 mb-3">
+            <!-- ── FOTO PROFIL AGAM (Ganti file foto di folder: static/img/tim/agam.png) ── -->
+            <div style="width:76px;height:76px;border-radius:20px;overflow:hidden;border:3px solid #10b981;box-shadow:0 8px 20px rgba(16,185,129,0.3);flex-shrink:0;" class="tentang-avatar-bg">
+              <img src="{{ url_for('static', filename='img/tim/agam.png') }}" alt="Agam Al Hakim Hasibuan" style="width:100%;height:100%;object-fit:cover;display:block;">
+            </div>
+            <div>
+              <h3 class="fw-bold tentang-heading mb-0" style="font-size:1.15rem;">
+                {{ agam.nama if agam else 'AGAM AL HAKIM HASIBUAN' }}
+              </h3>
+              <div class="text-primary fw-semibold" style="font-size:0.82rem;">Lead Full-Stack Developer</div>
+            </div>
+          </div>
+
+          <hr class="tentang-divider" style="margin:14px 0;">
+
+          <div class="mb-3">
+            <div class="tentang-label mb-2 fw-semibold" style="font-size:0.78rem;">Peran &amp; Tanggung Jawab:</div>
+            <p class="tentang-desc-text" style="font-size:0.83rem;line-height:1.68;margin-bottom:12px;text-align:justify;">
+              Bertanggung jawab memimpin dan mengoordinasikan pengembangan teknis website Kas-Kelas, mulai dari perancangan antarmuka pengguna (frontend), pengembangan logika sistem (backend), hingga pengelolaan dan integrasi database. Berperan dalam membangun fungsionalitas utama aplikasi, termasuk pengelolaan data anggota, pencatatan transaksi, pengelolaan iuran, serta perhitungan dan penyajian informasi keuangan kas kelas.
+            </p>
+            <p class="tentang-desc-text" style="font-size:0.83rem;line-height:1.68;margin-bottom:0;text-align:justify;">
+              Selain itu, bertanggung jawab memastikan setiap komponen sistem dapat terintegrasi dengan baik, menjaga konsistensi data, menangani kesalahan sistem, serta melakukan pengujian dan perbaikan untuk meningkatkan stabilitas dan kemudahan penggunaan aplikasi. Sebagai Lead Full-Stack Developer, Agam juga berperan dalam menentukan pendekatan teknis dan mengarahkan implementasi fitur agar pengembangan website berjalan terstruktur sesuai kebutuhan proyek.
+            </p>
+          </div>
+        </div>
+
+        <div class="p-3 rounded-3 mt-3 tentang-quote-box tentang-quote-agam">
+          <small class="tentang-quote-text fst-italic" style="font-size:0.78rem;">
+            "Ide tanpa eksekusi hanyalah angan-angan. Kode tanpa ketekunan hanyalah barisan karakter. Seorang pembangun tidak berhenti ketika sistem gagal; dia belajar, memperbaiki, dan kembali lebih kuat."
+            — Agam Al Hakim Hasibuan
+          </small>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. UI/UX DESIGNER & WEB PENTESTING: RYO ADRIANSYAH -->
+    <div class="col-lg-6">
+      <div class="glass-card p-4 h-100 position-relative overflow-hidden d-flex flex-column justify-content-between tentang-dev-card tentang-dev-ryo">
+        <div>
+          <div class="d-flex align-items-center gap-3 mb-3">
+            <!-- ── FOTO PROFIL RYO (Ganti file foto di folder: static/img/tim/ryo.png) ── -->
+            <div style="width:76px;height:76px;border-radius:20px;overflow:hidden;border:3px solid #0284c7;box-shadow:0 8px 20px rgba(2,132,199,0.3);flex-shrink:0;" class="tentang-avatar-bg">
+              <img src="{{ url_for('static', filename='img/tim/ryo.png') }}" alt="Ryo Adriansyah" style="width:100%;height:100%;object-fit:cover;display:block;">
+            </div>
+            <div>
+              <h3 class="fw-bold tentang-heading mb-0" style="font-size:1.15rem;">
+                RYO ADRIANSYAH
+              </h3>
+              <div class="text-info fw-semibold" style="font-size:0.82rem;">UI/UX Designer &amp; Web Pentesting</div>
+            </div>
+          </div>
+
+          <hr class="tentang-divider" style="margin:14px 0;">
+
+          <div class="mb-3">
+            <div class="tentang-label mb-2 fw-semibold" style="font-size:0.78rem;">Peran &amp; Tanggung Jawab:</div>
+            <p class="tentang-desc-text" style="font-size:0.83rem;line-height:1.68;margin-bottom:12px;text-align:justify;">
+              Bertanggung jawab merancang dan mengembangkan konsep antarmuka serta pengalaman pengguna (UI/UX) pada website Kas-Kelas agar memiliki tampilan yang modern, intuitif, responsif, dan mudah digunakan. Berperan dalam menyusun tata letak halaman, menentukan konsistensi elemen visual, serta memastikan alur navigasi dan interaksi pengguna berjalan dengan baik pada berbagai perangkat.
+            </p>
+            <p class="tentang-desc-text" style="font-size:0.83rem;line-height:1.68;margin-bottom:0;text-align:justify;">
+              Selain berfokus pada desain, Ryo juga berperan dalam pengujian keamanan website (web penetration testing) untuk membantu mengidentifikasi potensi kerentanan pada aplikasi. Pengujian dilakukan pada sistem yang berada dalam lingkup dan izin proyek, dengan tujuan mengevaluasi aspek keamanan, menemukan kelemahan yang perlu diperbaiki, serta memberikan rekomendasi mitigasi untuk meningkatkan perlindungan data dan keandalan website Kas-Kelas.
+            </p>
+          </div>
+        </div>
+
+        <div class="p-3 rounded-3 mt-3 tentang-quote-box tentang-quote-ryo">
+          <small class="tentang-quote-text fst-italic" style="font-size:0.78rem;">
+          "Desain yang indah menarik perhatian, pengalaman yang baik memenangkan kepercayaan. Namun, keamananlah yang menjaga kepercayaan itu tetap hidup. Sebab, website yang hebat bukan hanya nyaman digunakan, tetapi juga kuat menghadapi ancaman."
+— Ryo Adriansyah
+          </small>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. BENDAHARA & PENGURUS KEUANGAN KELAS -->
+    <div class="col-md-6">
+      <div class="glass-card p-4 h-100">
+        <div class="d-flex align-items-center gap-2 mb-2">
+          <i class="bi bi-coin text-warning" style="font-size:1.3rem;"></i>
+          <h4 class="fw-bold tentang-heading mb-0" style="font-size:1rem;">Bendahara Kelas</h4>
+        </div>
+        <p class="tentang-body-text mb-3" style="font-size:0.8rem;">
+          Bertanggung jawab dalam pengelolaan harian kas kelas:
+        </p>
+        <ul class="tentang-list ps-3 mb-0" style="font-size:0.82rem;line-height:1.6;">
+          <li>Memverifikasi bukti transfer iuran anggota via DANA, GoPay, OVO, dan BRImo.</li>
+          <li>Mencatat pengeluaran kas saat ada kegiatan kelas, fotokopi, atau kebutuhan bersama.</li>
+          <li>Menerbitkan pengumuman pengingat iuran bulanan tepat waktu.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- 4. SELURUH 27 MAHASISWA KELAS B TIF 2024 -->
+    <div class="col-md-6">
+      <div class="glass-card p-4 h-100">
+        <div class="d-flex align-items-center gap-2 mb-2">
+          <i class="bi bi-mortarboard-fill text-success" style="font-size:1.3rem;"></i>
+          <h4 class="fw-bold tentang-heading mb-0" style="font-size:1rem;">Seluruh Anggota Kelas B</h4>
+        </div>
+        <p class="tentang-body-text mb-3" style="font-size:0.8rem;">
+          27 Mahasiswa berdedikasi Program Studi Teknik Informatika Angkatan 2024:
+        </p>
+        <ul class="tentang-list ps-3 mb-0" style="font-size:0.82rem;line-height:1.6;">
+          <li>Mendukung solidaritas kelas dengan membayar iuran kas bulanan secara tertib.</li>
+          <li>Memanfaatkan website kas kelas untuk saling mengawasi secara konstruktif dan transparan.</li>
+          <li>Menjunjung tinggi sportivitas dan kebersamaan di lingkungan akademik universitas.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── TEKNOLOGI PENDUKUNG (TECH STACK) ────────────────────────── -->
+<div class="glass-card p-4 fade-in fade-in-4">
+  <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-3">
+    <div class="section-title mb-0 d-flex align-items-center gap-2">
+      <i class="bi bi-cpu-fill text-primary"></i> Teknologi di Balik Website
+    </div>
+  </div>
+
+  <p class="tentang-body-text" style="font-size:0.85rem;margin-bottom:24px;">
+    Sistem Kas-Kelas dibangun dengan arsitektur terstruktur yang memisahkan bahasa pemrograman inti dan ekosistem framework/library untuk performa maksimal, keamanan data, dan tampilan yang modern:
+  </p>
+
+  <!-- ── 1. BAHASA PEMROGRAMAN & CORE WEB (FOTO LOGO ASLI) ─────── -->
+  <div class="mb-4 pb-2">
+    <div class="d-flex align-items-center gap-2 mb-3">
+      <span class="badge d-inline-flex align-items-center gap-1"
+            style="background:rgba(16,185,129,0.15);color:#34d399;font-size:0.78rem;font-weight:600;padding:6px 14px;border:1px solid rgba(16,185,129,0.3);border-radius:8px;">
+        <i class="bi bi-code-square"></i> 1. Bahasa Pemrograman &amp; Web Core
+      </span>
+      <div class="flex-grow-1 border-bottom tentang-divider-line"></div>
+    </div>
+
+    <div class="row g-3 text-center">
+      <!-- 1. PYTHON -->
+      <div class="col-6 col-md-3">
+        <div class="tech-item-box p-3 rounded-4 h-100 d-flex flex-column align-items-center justify-content-center tentang-tech-box"
+             style="border:1px solid rgba(56,189,248,0.25);">
+          <div class="tech-logo-container mb-2 d-flex align-items-center justify-content-center" style="height:56px;width:56px;">
+            <img src="{{ url_for('static', filename='img/tech/python.png') }}" alt="Logo Python"
+                 style="max-height:50px;max-width:50px;object-fit:contain;filter:drop-shadow(0 4px 10px rgba(0,0,0,0.4));">
+          </div>
+          <div class="fw-bold tentang-heading" style="font-size:0.95rem;">Python</div>
+          <div class="tentang-tech-sub" style="font-size:0.75rem;font-weight:500;">Backend &amp; Logika Inti</div>
+        </div>
+      </div>
+
+      <!-- 2. HTML -->
+      <div class="col-6 col-md-3">
+        <div class="tech-item-box p-3 rounded-4 h-100 d-flex flex-column align-items-center justify-content-center tentang-tech-box"
+             style="border:1px solid rgba(249,115,22,0.25);">
+          <div class="tech-logo-container mb-2 d-flex align-items-center justify-content-center" style="height:56px;width:56px;">
+            <img src="{{ url_for('static', filename='img/tech/html.png') }}" alt="Logo HTML"
+                 style="max-height:50px;max-width:50px;object-fit:contain;filter:drop-shadow(0 4px 10px rgba(0,0,0,0.4));">
+          </div>
+          <div class="fw-bold tentang-heading" style="font-size:0.95rem;">HTML</div>
+          <div class="tentang-tech-sub" style="font-size:0.75rem;font-weight:500;">Struktur &amp; Semantik Web</div>
+        </div>
+      </div>
+
+      <!-- 3. CSS -->
+      <div class="col-6 col-md-3">
+        <div class="tech-item-box p-3 rounded-4 h-100 d-flex flex-column align-items-center justify-content-center tentang-tech-box"
+             style="border:1px solid rgba(59,130,246,0.25);">
+          <div class="tech-logo-container mb-2 d-flex align-items-center justify-content-center" style="height:56px;width:56px;">
+            <img src="{{ url_for('static', filename='img/tech/css.png') }}" alt="Logo CSS"
+                 style="max-height:50px;max-width:50px;object-fit:contain;filter:drop-shadow(0 4px 10px rgba(0,0,0,0.4));">
+          </div>
+          <div class="fw-bold tentang-heading" style="font-size:0.95rem;">CSS</div>
+          <div class="tentang-tech-sub" style="font-size:0.75rem;font-weight:500;">Styling &amp; Tata Letak</div>
+        </div>
+      </div>
+
+      <!-- 4. JAVASCRIPT -->
+      <div class="col-6 col-md-3">
+        <div class="tech-item-box p-3 rounded-4 h-100 d-flex flex-column align-items-center justify-content-center tentang-tech-box"
+             style="border:1px solid rgba(234,179,8,0.25);">
+          <div class="tech-logo-container mb-2 d-flex align-items-center justify-content-center" style="height:56px;width:56px;">
+            <img src="{{ url_for('static', filename='img/tech/javascript.png') }}" alt="Logo JavaScript"
+                 style="max-height:50px;max-width:50px;object-fit:contain;filter:drop-shadow(0 4px 10px rgba(0,0,0,0.4));">
+          </div>
+          <div class="fw-bold tentang-heading" style="font-size:0.95rem;">JavaScript</div>
+          <div class="tentang-tech-sub" style="font-size:0.75rem;font-weight:500;">Interaktivitas &amp; Audio</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── 2. FRAMEWORK, DATABASE & LIBRARY (SUSUNAN TETAP) ──────── -->
+  <div>
+    <div class="d-flex align-items-center gap-2 mb-3">
+      <span class="badge d-inline-flex align-items-center gap-1"
+            style="background:rgba(56,189,248,0.15);color:#38bdf8;font-size:0.78rem;font-weight:600;padding:6px 14px;border:1px solid rgba(56,189,248,0.3);border-radius:8px;">
+        <i class="bi bi-layers-fill"></i> 2. Framework, Database &amp; Library
+      </span>
+      <div class="flex-grow-1 border-bottom tentang-divider-line"></div>
+    </div>
+
+    <div class="row g-3 text-center">
+      <!-- 5. FLASK -->
+      <div class="col-6 col-md-4 col-lg">
+        <div class="tech-item-box p-3 rounded-4 h-100 d-flex flex-column align-items-center justify-content-center tentang-tech-box"
+             style="border:1px solid rgba(255,255,255,0.12);">
+          <div class="tech-logo-container mb-2 d-flex align-items-center justify-content-center" style="height:56px;width:56px;">
+            <img src="{{ url_for('static', filename='img/tech/flask.png') }}" alt="Logo Flask"
+                 style="max-height:46px;max-width:54px;object-fit:contain;filter:drop-shadow(0 4px 10px rgba(0,0,0,0.4));">
+          </div>
+          <div class="fw-bold tentang-heading" style="font-size:0.9rem;">Flask</div>
+          <div class="tentang-tech-sub" style="font-size:0.72rem;">Micro Web Framework</div>
+        </div>
+      </div>
+
+      <!-- 6. BOOTSTRAP -->
+      <div class="col-6 col-md-4 col-lg">
+        <div class="tech-item-box p-3 rounded-4 h-100 d-flex flex-column align-items-center justify-content-center tentang-tech-box"
+             style="border:1px solid rgba(147,51,234,0.25);">
+          <div class="tech-logo-container mb-2 d-flex align-items-center justify-content-center" style="height:56px;width:56px;">
+            <img src="{{ url_for('static', filename='img/tech/bootstrap.png') }}" alt="Logo Bootstrap"
+                 style="max-height:50px;max-width:50px;object-fit:contain;filter:drop-shadow(0 4px 10px rgba(0,0,0,0.4));">
+          </div>
+          <div class="fw-bold tentang-heading" style="font-size:0.9rem;">Bootstrap</div>
+          <div class="tentang-tech-sub" style="font-size:0.72rem;">Responsive Grid &amp; UI</div>
+        </div>
+      </div>
+
+      <!-- 7. TAILWIND CSS -->
+      <div class="col-6 col-md-4 col-lg">
+        <div class="tech-item-box p-3 rounded-4 h-100 d-flex flex-column align-items-center justify-content-center tentang-tech-box"
+             style="border:1px solid rgba(56,189,248,0.25);">
+          <div class="tech-logo-container mb-2 d-flex align-items-center justify-content-center" style="height:56px;width:56px;">
+            <img src="{{ url_for('static', filename='img/tech/tailwind.png') }}" alt="Logo Tailwind CSS"
+                 style="max-height:50px;max-width:50px;object-fit:contain;filter:drop-shadow(0 4px 10px rgba(0,0,0,0.4));">
+          </div>
+          <div class="fw-bold tentang-heading" style="font-size:0.9rem;">Tailwind CSS</div>
+          <div class="tentang-tech-sub" style="font-size:0.72rem;">Utility-First Styles</div>
+        </div>
+      </div>
+
+      <!-- 8. MYSQL -->
+      <div class="col-6 col-md-4 col-lg">
+        <div class="tech-item-box p-3 rounded-4 h-100 d-flex flex-column align-items-center justify-content-center tentang-tech-box"
+             style="border:1px solid rgba(2,132,199,0.25);">
+          <div class="tech-logo-container mb-2 d-flex align-items-center justify-content-center" style="height:56px;width:56px;">
+            <img src="{{ url_for('static', filename='img/tech/mysql.png') }}" alt="Logo MySQL"
+                 style="max-height:50px;max-width:54px;object-fit:contain;filter:drop-shadow(0 4px 10px rgba(0,0,0,0.4));">
+          </div>
+          <div class="fw-bold tentang-heading" style="font-size:0.9rem;">MySQL</div>
+          <div class="tentang-tech-sub" style="font-size:0.72rem;">Relational Storage</div>
+        </div>
+      </div>
+
+      <!-- 9. CHART.JS -->
+      <div class="col-6 col-md-4 col-lg">
+        <div class="tech-item-box p-3 rounded-4 h-100 d-flex flex-column align-items-center justify-content-center tentang-tech-box"
+             style="border:1px solid rgba(244,63,94,0.25);">
+          <div class="tech-logo-container mb-2 d-flex align-items-center justify-content-center" style="height:56px;width:56px;">
+            <img src="{{ url_for('static', filename='img/tech/chartjs.png') }}" alt="Logo Chart.js"
+                 style="max-height:50px;max-width:50px;object-fit:contain;filter:drop-shadow(0 4px 10px rgba(0,0,0,0.4));">
+          </div>
+          <div class="fw-bold tentang-heading" style="font-size:0.9rem;">Chart.js</div>
+          <div class="tentang-tech-sub" style="font-size:0.72rem;">Financial Analytics</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

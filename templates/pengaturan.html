@@ -1,0 +1,649 @@
+{% extends 'base.html' %}
+{% block title %}Pengaturan Website{% endblock %}
+
+{% block content %}
+<!-- Toast Notification Container for Quick Feedback -->
+<div id="toastNotification" class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 9999;">
+  <div id="actionToast" class="toast align-items-center text-white bg-success border-0 glass-alert" role="alert" aria-live="assertive" aria-atomic="true">
+    <div class="d-flex">
+      <div class="toast-body d-flex align-items-center gap-2" id="toastMessage" style="font-size:0.875rem;">
+        <i class="bi bi-check-circle-fill"></i> Berhasil!
+      </div>
+      <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+    </div>
+  </div>
+</div>
+
+<div class="page-header fade-in fade-in-1">
+  <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+    <div>
+      <h1 class="h3 fw-bold mb-1 text-white"><i class="bi bi-gear-wide-connected text-primary me-2"></i>Pengaturan Website</h1>
+      <p style="color:#cbd5e1;font-size:0.88rem;margin-bottom:0;">Sesuaikan tampilan tema, nada notifikasi,integrasi e-wallet,yang anda inginkan.</p>
+    </div>
+    <div>
+      <a href="{{ url_for('beranda') }}" class="btn btn-sm btn-outline-secondary" style="border-radius:8px;">
+        <i class="bi bi-arrow-left me-1"></i> Kembali ke Beranda
+      </a>
+    </div>
+  </div>
+</div>
+
+<div class="row g-4">
+  <!-- ── 1. PENGATURAN TAMPILAN (GELAP / TERANG) ────────────────── -->
+  <div class="col-lg-6 fade-in fade-in-1">
+    <div class="glass-card p-4 h-100">
+      <div class="section-title mb-2 d-flex align-items-center gap-2 text-white">
+        <i class="bi bi-palette text-primary"></i> Pengaturan Tampilan Tema
+      </div>
+      <p style="color:#94a3b8;font-size:0.85rem;margin-bottom:1.25rem;">
+        Pilih preferensi mode tampilan yang paling nyaman untuk mata Anda saat menggunakan web kas kelas.
+      </p>
+
+      <div class="row g-3">
+        <!-- Mode Gelap -->
+        <div class="col-6">
+          <div class="theme-card p-3 rounded-4 text-center position-relative"
+               id="themeCardDark"
+               onclick="selectTheme('dark')"
+               style="background:#0d1117;border:2px solid #10b981;cursor:pointer;transition:all 0.25s ease;">
+            <div class="d-flex justify-content-center mb-2">
+              <div class="d-flex align-items-center justify-content-center"
+                   style="width:48px;height:48px;border-radius:12px;background:rgba(16,185,129,0.15);color:#10b981;">
+                <i class="bi bi-moon-stars-fill" style="font-size:1.4rem;"></i>
+              </div>
+            </div>
+            <div class="fw-bold text-white mb-1" style="font-size:0.95rem;">Mode Gelap</div>
+            <div style="color:#94a3b8;font-size:0.75rem;">Nuansa OLED Dark Elegan</div>
+            <span class="badge bg-success mt-2" id="badgeDark" style="font-size:0.7rem;">● Sedang Aktif</span>
+          </div>
+        </div>
+
+        <!-- Mode Terang -->
+        <div class="col-6">
+          <div class="theme-card p-3 rounded-4 text-center position-relative"
+               id="themeCardLight"
+               onclick="selectTheme('light')"
+               style="background:#ffffff;border:2px solid rgba(255,255,255,0.1);cursor:pointer;transition:all 0.25s ease;">
+            <div class="d-flex justify-content-center mb-2">
+              <div class="d-flex align-items-center justify-content-center"
+                   style="width:48px;height:48px;border-radius:12px;background:rgba(245,158,11,0.15);color:#f59e0b;">
+                <i class="bi bi-sun-fill" style="font-size:1.4rem;"></i>
+              </div>
+            </div>
+            <div class="fw-bold text-dark mb-1" style="font-size:0.95rem;">Mode Terang</div>
+            <div style="color:#64748b;font-size:0.75rem;">Nuansa Bersih & Smooth di Mata</div>
+            <span class="badge bg-success mt-2 d-none" id="badgeLight" style="font-size:0.7rem;">● Sedang Aktif</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-4 p-3 rounded-3" style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);">
+        <small style="color:#cbd5e1;font-size:0.8rem;display:flex;align-items:center;gap:6px;">
+          <i class="bi bi-info-circle text-primary"></i> Anda juga dapat mengubah tema dengan cepat kapan saja melalui tombol matahari/bulan di bagian atas (topbar).
+        </small>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── 2. PENGATURAN NADA NOTIFIKASI (KUSTOM MP3 DARI PERANGKAT) ─ -->
+  <div class="col-lg-6 fade-in fade-in-2">
+    <div class="glass-card p-4 h-100">
+      <div class="section-title mb-2 d-flex align-items-center gap-2 text-white">
+        <i class="bi bi-bell-fill text-primary"></i> Pengaturan Nada Notifikasi
+      </div>
+      <p style="color:#94a3b8;font-size:0.85rem;margin-bottom:1.25rem;">
+        Kustomisasi nada notifikasi transaksi dan pengumuman kas kelas menggunakan file audio MP3 dari perangkat Anda.
+      </p>
+
+      <!-- Status Nada Saat Ini -->
+      <div class="p-3 rounded-3 mb-3 d-flex align-items-center justify-content-between"
+           style="background:rgba(16,185,129,0.08);border:1px solid rgba(16,185,129,0.25);">
+        <div>
+          <div style="color:#94a3b8;font-size:0.75rem;margin-bottom:2px;">Nada Notifikasi Aktif:</div>
+          <div class="fw-bold text-white d-flex align-items-center gap-2" style="font-size:0.92rem;">
+            <i class="bi bi-music-note-beamed text-success"></i>
+            <span id="currentSoundName">{{ kelas.notification_sound if kelas and kelas.notification_sound else 'Chime Digital (Bawaan)' }}</span>
+          </div>
+        </div>
+        <button class="btn btn-sm btn-outline-success d-flex align-items-center gap-1"
+                onclick="playNotificationSound()"
+                style="border-radius:8px;font-size:0.8rem;">
+          <i class="bi bi-play-circle-fill"></i> Tes Suara
+        </button>
+      </div>
+
+      <!-- Form Upload MP3 dari Perangkat -->
+      <form action="{{ url_for('pengaturan_nada') }}" method="POST" enctype="multipart/form-data" class="mb-3">
+        <label class="form-label" style="font-size:0.82rem;color:#cbd5e1;font-weight:500;">
+          Unggah File MP3 / Audio dari Perangkat Anda:
+        </label>
+        <div class="input-group mb-2">
+          <input type="file" name="audio_file" accept="audio/mp3,audio/wav,audio/ogg,audio/m4a,audio/*"
+                 class="form-control form-control-dark" id="inputAudioFile" required>
+          <button type="submit" class="btn btn-primary d-flex align-items-center gap-1">
+            <i class="bi bi-upload"></i> Unggah MP3
+          </button>
+        </div>
+        <div style="color:#94a3b8;font-size:0.78rem;">
+          Mendukung format: <strong class="text-white">.MP3, .WAV, .OGG, .M4A</strong> (Maksimal 10 MB).
+        </div>
+      </form>
+
+      <!-- Preset Pilihan Cepat -->
+      <div class="border-top border-gray-800 pt-3">
+        <div style="color:#cbd5e1;font-size:0.8rem;font-weight:500;margin-bottom:8px;">Atau Pilih Preset Suara Bawaan:</div>
+        <form action="{{ url_for('pengaturan_nada') }}" method="POST" class="d-flex gap-2 flex-wrap">
+          <button type="submit" name="sound_preset" value="Chime Modern" class="btn btn-sm btn-outline-secondary" style="border-radius:8px;">
+            🔔 Chime
+          </button>
+          <button type="submit" name="sound_preset" value="Cash Register (Uang Masuk)" class="btn btn-sm btn-outline-secondary" style="border-radius:8px;">
+            💰 Cash Register
+          </button>
+          <button type="submit" name="sound_preset" value="Ting Lembut" class="btn btn-sm btn-outline-secondary" style="border-radius:8px;">
+            ✨ Ting
+          </button>
+          <button type="submit" name="sound_preset" value="Digital Beep" class="btn btn-sm btn-outline-secondary" style="border-radius:8px;">
+            📟 Digital Beep
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── 3. HUBUNGKAN AKUN E-WALLET & BANK KAS KELAS (LOGO ASLI & AKTIF) ── -->
+  <div class="col-12 fade-in fade-in-3">
+    <div class="glass-card p-4">
+      <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
+        <div>
+          <div class="section-title mb-1 d-flex align-items-center gap-2 text-white">
+            <i class="bi bi-wallet2 text-primary"></i> Hubungkan Akun E-Wallet & Bank Kas Kelas
+          </div>
+          <p style="color:#94a3b8;font-size:0.85rem;margin-bottom:0;">
+            Kelola akun penerimaan kas kelas (DANA, GoPay, OVO, BRImo) yang terintegrasi aktif. Anggota dapat langsung menyalin nomor, membuka aplikasi dompet digital, atau scan QR pembayaran.
+          </p>
+        </div>
+        <div class="d-flex gap-2">
+          <button type="button" class="btn btn-sm btn-outline-info d-flex align-items-center gap-1"
+                  onclick="openPaymentModal()" style="border-radius:8px;font-size:0.8rem;">
+            <i class="bi bi-qr-code-scan"></i> Buka Panduan Bayar / QRIS
+          </button>
+        </div>
+      </div>
+
+      <form action="{{ url_for('pengaturan_ewallet') }}" method="POST">
+        <div class="row g-4">
+          <!-- ── E-WALLET 1: DANA (FOTO LOGO ASLI DANA) ── -->
+          <div class="col-md-6 col-xl-3">
+            <div class="p-4 rounded-4 h-100 position-relative d-flex flex-column justify-content-between ewallet-box ewallet-dana"
+                 style="background:linear-gradient(145deg, rgba(17,142,234,0.12) 0%, rgba(13,17,23,0.85) 100%);border:1px solid rgba(17,142,234,0.35);">
+              <div>
+                <div class="d-flex align-items-center justify-content-between mb-3">
+                  <!-- Official DANA Logo Image -->
+                  <div class="d-flex align-items-center gap-2">
+                    <div class="ewallet-logo-box">
+                      <img src="{{ url_for('static', filename='img/ewallet/dana.png') }}" alt="Logo DANA" class="ewallet-logo-img">
+                    </div>
+                    <div>
+                      <div class="fw-bold text-white ewallet-name" style="font-size:1.05rem;letter-spacing:0.5px;">DANA</div>
+                      <small style="color:#38bdf8;font-size:0.7rem;">Dompet Digital</small>
+                    </div>
+                  </div>
+
+                  {% if kelas and kelas.no_dana %}
+                    <span class="badge bg-success d-flex align-items-center gap-1" style="font-size:0.7rem;padding:4px 8px;">
+                      <span style="width:6px;height:6px;border-radius:50%;background:#fff;"></span> Aktif
+                    </span>
+                  {% else %}
+                    <span class="badge bg-secondary" style="font-size:0.7rem;">Belum Aktif</span>
+                  {% endif %}
+                </div>
+
+                <div class="mb-2">
+                  <label class="form-label" style="font-size:0.78rem;color:#cbd5e1;font-weight:500;">Nomor Akun DANA:</label>
+                  <input type="text" name="no_dana" id="inputNoDana" class="form-control form-control-dark"
+                         value="{{ kelas.no_dana if kelas and kelas.no_dana else '+62123456' }}"
+                         placeholder="08123456789 atau +62..." required>
+                </div>
+
+                <div class="mb-3">
+                  <label class="form-label" style="font-size:0.78rem;color:#cbd5e1;font-weight:500;">Atas Nama (a.n.):</label>
+                  <input type="text" name="an_dana" class="form-control form-control-dark"
+                         value="{{ kelas.an_dana if kelas and kelas.an_dana else 'Bendahara Kelas' }}"
+                         placeholder="Nama Pemilik Akun">
+                </div>
+              </div>
+
+              <!-- Action Buttons -->
+              <div class="d-flex gap-2 pt-2 border-top border-gray-800">
+                <button type="button" class="btn btn-sm btn-outline-info flex-grow-1 d-flex align-items-center justify-content-center gap-1"
+                        onclick="copyEwalletNumber('DANA', document.getElementById('inputNoDana').value)"
+                        title="Salin Nomor DANA" style="border-radius:8px;font-size:0.75rem;">
+                  <i class="bi bi-clipboard"></i> Salin
+                </button>
+                <a href="https://link.dana.id/" target="_blank" class="btn btn-sm btn-info text-white flex-grow-1 d-flex align-items-center justify-content-center gap-1"
+                   style="border-radius:8px;font-size:0.75rem;background:#118EEA;border-color:#118EEA;">
+                  <i class="bi bi-box-arrow-up-right"></i> Buka DANA
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <!-- ── E-WALLET 2: GOPAY (FOTO LOGO ASLI GOPAY) ── -->
+          <div class="col-md-6 col-xl-3">
+            <div class="p-4 rounded-4 h-100 position-relative d-flex flex-column justify-content-between ewallet-box ewallet-gopay"
+                 style="background:linear-gradient(145deg, rgba(0,174,214,0.12) 0%, rgba(13,17,23,0.85) 100%);border:1px solid rgba(0,174,214,0.35);">
+              <div>
+                <div class="d-flex align-items-center justify-content-between mb-3">
+                  <!-- Official GoPay Logo Image -->
+                  <div class="d-flex align-items-center gap-2">
+                    <div class="ewallet-logo-box">
+                      <img src="{{ url_for('static', filename='img/ewallet/gopay.png') }}" alt="Logo GoPay" class="ewallet-logo-img">
+                    </div>
+                    <div>
+                      <div class="fw-bold text-white ewallet-name" style="font-size:1.05rem;letter-spacing:0.5px;">GoPay</div>
+                      <small style="color:#38bdf8;font-size:0.7rem;">Gojek E-Wallet</small>
+                    </div>
+                  </div>
+
+                  {% if kelas and kelas.no_gopay %}
+                    <span class="badge bg-success d-flex align-items-center gap-1" style="font-size:0.7rem;padding:4px 8px;">
+                      <span style="width:6px;height:6px;border-radius:50%;background:#fff;"></span> Aktif
+                    </span>
+                  {% else %}
+                    <span class="badge bg-secondary" style="font-size:0.7rem;">Belum Aktif</span>
+                  {% endif %}
+                </div>
+
+                <div class="mb-2">
+                  <label class="form-label" style="font-size:0.78rem;color:#cbd5e1;font-weight:500;">Nomor Akun GoPay:</label>
+                  <input type="text" name="no_gopay" id="inputNoGopay" class="form-control form-control-dark"
+                         value="{{ kelas.no_gopay if kelas and kelas.no_gopay else '' }}"
+                         placeholder="08123456789 (Nomor GoPay)">
+                </div>
+
+                <div class="mb-3">
+                  <label class="form-label" style="font-size:0.78rem;color:#cbd5e1;font-weight:500;">Atas Nama (a.n.):</label>
+                  <input type="text" name="an_gopay" class="form-control form-control-dark"
+                         value="{{ kelas.an_gopay if kelas and kelas.an_gopay else 'Bendahara Kelas' }}"
+                         placeholder="Nama Pemilik Akun">
+                </div>
+              </div>
+
+              <!-- Action Buttons -->
+              <div class="d-flex gap-2 pt-2 border-top border-gray-800">
+                <button type="button" class="btn btn-sm btn-outline-info flex-grow-1 d-flex align-items-center justify-content-center gap-1"
+                        onclick="copyEwalletNumber('GoPay', document.getElementById('inputNoGopay').value)"
+                        title="Salin Nomor GoPay" style="border-radius:8px;font-size:0.75rem;">
+                  <i class="bi bi-clipboard"></i> Salin
+                </button>
+                <a href="https://gopay.co.id/" target="_blank" class="btn btn-sm text-white flex-grow-1 d-flex align-items-center justify-content-center gap-1"
+                   style="border-radius:8px;font-size:0.75rem;background:#00AED6;border-color:#00AED6;">
+                  <i class="bi bi-box-arrow-up-right"></i> Buka GoPay
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <!-- ── E-WALLET 3: OVO (FOTO LOGO ASLI OVO) ── -->
+          <div class="col-md-6 col-xl-3">
+            <div class="p-4 rounded-4 h-100 position-relative d-flex flex-column justify-content-between ewallet-box ewallet-ovo"
+                 style="background:linear-gradient(145deg, rgba(76,52,148,0.15) 0%, rgba(13,17,23,0.85) 100%);border:1px solid rgba(147,51,234,0.35);">
+              <div>
+                <div class="d-flex align-items-center justify-content-between mb-3">
+                  <!-- Official OVO Logo Image -->
+                  <div class="d-flex align-items-center gap-2">
+                    <div class="ewallet-logo-box">
+                      <img src="{{ url_for('static', filename='img/ewallet/ovo.png') }}" alt="Logo OVO" class="ewallet-logo-img">
+                    </div>
+                    <div>
+                      <div class="fw-bold text-white ewallet-name" style="font-size:1.05rem;letter-spacing:0.5px;">OVO</div>
+                      <small style="color:#c084fc;font-size:0.7rem;">OVO Payment</small>
+                    </div>
+                  </div>
+
+                  {% if kelas and kelas.no_ovo %}
+                    <span class="badge bg-success d-flex align-items-center gap-1" style="font-size:0.7rem;padding:4px 8px;">
+                      <span style="width:6px;height:6px;border-radius:50%;background:#fff;"></span> Aktif
+                    </span>
+                  {% else %}
+                    <span class="badge bg-secondary" style="font-size:0.7rem;">Belum Aktif</span>
+                  {% endif %}
+                </div>
+
+                <div class="mb-2">
+                  <label class="form-label" style="font-size:0.78rem;color:#cbd5e1;font-weight:500;">Nomor Akun OVO:</label>
+                  <input type="text" name="no_ovo" id="inputNoOvo" class="form-control form-control-dark"
+                         value="{{ kelas.no_ovo if kelas and kelas.no_ovo else '' }}"
+                         placeholder="08123456789 (Nomor OVO)">
+                </div>
+
+                <div class="mb-3">
+                  <label class="form-label" style="font-size:0.78rem;color:#cbd5e1;font-weight:500;">Atas Nama (a.n.):</label>
+                  <input type="text" name="an_ovo" class="form-control form-control-dark"
+                         value="{{ kelas.an_ovo if kelas and kelas.an_ovo else 'Bendahara Kelas' }}"
+                         placeholder="Nama Pemilik Akun">
+                </div>
+              </div>
+
+              <!-- Action Buttons -->
+              <div class="d-flex gap-2 pt-2 border-top border-gray-800">
+                <button type="button" class="btn btn-sm btn-outline-info flex-grow-1 d-flex align-items-center justify-content-center gap-1"
+                        onclick="copyEwalletNumber('OVO', document.getElementById('inputNoOvo').value)"
+                        title="Salin Nomor OVO" style="border-radius:8px;font-size:0.75rem;">
+                  <i class="bi bi-clipboard"></i> Salin
+                </button>
+                <a href="https://www.ovo.id/" target="_blank" class="btn btn-sm text-white flex-grow-1 d-flex align-items-center justify-content-center gap-1"
+                   style="border-radius:8px;font-size:0.75rem;background:#7e22ce;border-color:#7e22ce;">
+                  <i class="bi bi-box-arrow-up-right"></i> Buka OVO
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <!-- ── BANK E-WALLET 4: BRIMO / BRI (FOTO LOGO ASLI BRIMO) ── -->
+          <div class="col-md-6 col-xl-3">
+            <div class="p-4 rounded-4 h-100 position-relative d-flex flex-column justify-content-between ewallet-box ewallet-brimo"
+                 style="background:linear-gradient(145deg, rgba(0,82,156,0.15) 0%, rgba(13,17,23,0.85) 100%);border:1px solid rgba(2,132,199,0.35);">
+              <div>
+                <div class="d-flex align-items-center justify-content-between mb-3">
+                  <!-- Official BRImo Logo Image -->
+                  <div class="d-flex align-items-center gap-2">
+                    <div class="ewallet-logo-box">
+                      <img src="{{ url_for('static', filename='img/ewallet/brimo.png') }}" alt="Logo BRImo" class="ewallet-logo-img">
+                    </div>
+                    <div>
+                      <div class="fw-bold text-white ewallet-name" style="font-size:1.05rem;letter-spacing:0.5px;">BRImo</div>
+                      <small style="color:#38bdf8;font-size:0.7rem;">Bank BRI Mobile</small>
+                    </div>
+                  </div>
+
+                  {% if kelas and kelas.no_brimo %}
+                    <span class="badge bg-success d-flex align-items-center gap-1" style="font-size:0.7rem;padding:4px 8px;">
+                      <span style="width:6px;height:6px;border-radius:50%;background:#fff;"></span> Aktif
+                    </span>
+                  {% else %}
+                    <span class="badge bg-secondary" style="font-size:0.7rem;">Belum Aktif</span>
+                  {% endif %}
+                </div>
+
+                <div class="mb-2">
+                  <label class="form-label" style="font-size:0.78rem;color:#cbd5e1;font-weight:500;">No. Rekening / BRImo:</label>
+                  <input type="text" name="no_brimo" id="inputNoBrimo" class="form-control form-control-dark"
+                         value="{{ kelas.no_brimo if kelas and kelas.no_brimo else '' }}"
+                         placeholder="Nomor Rekening BRI / BRImo">
+                </div>
+
+                <div class="mb-3">
+                  <label class="form-label" style="font-size:0.78rem;color:#cbd5e1;font-weight:500;">Atas Nama (a.n.):</label>
+                  <input type="text" name="an_brimo" class="form-control form-control-dark"
+                         value="{{ kelas.an_brimo if kelas and kelas.an_brimo else 'Kas Kelas 2024' }}"
+                         placeholder="Nama Pemilik Rekening">
+                </div>
+              </div>
+
+              <!-- Action Buttons -->
+              <div class="d-flex gap-2 pt-2 border-top border-gray-800">
+                <button type="button" class="btn btn-sm btn-outline-info flex-grow-1 d-flex align-items-center justify-content-center gap-1"
+                        onclick="copyEwalletNumber('BRImo', document.getElementById('inputNoBrimo').value)"
+                        title="Salin Rekening BRImo" style="border-radius:8px;font-size:0.75rem;">
+                  <i class="bi bi-clipboard"></i> Salin
+                </button>
+                <a href="https://bri.co.id/brimo" target="_blank" class="btn btn-sm text-white flex-grow-1 d-flex align-items-center justify-content-center gap-1"
+                   style="border-radius:8px;font-size:0.75rem;background:#0284c7;border-color:#0284c7;">
+                  <i class="bi bi-box-arrow-up-right"></i> Buka BRImo
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="d-flex justify-content-end mt-4">
+          <button type="submit" class="btn btn-primary d-flex align-items-center gap-2" style="border-radius:10px;padding:9px 26px;">
+            <i class="bi bi-check-circle-fill"></i> Simpan & Hubungkan Akun E-Wallet
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ── 4. FITUR HAPUS DATA KESELURUHAN (DANGER ZONE) ──────────── -->
+  <div class="col-12 fade-in fade-in-4">
+    <div class="glass-card p-4" style="border:1px solid rgba(239,68,68,0.35);background:rgba(239,68,68,0.03);">
+      <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-2">
+        <div class="d-flex align-items-center gap-2">
+          <div style="width:36px;height:36px;border-radius:10px;background:rgba(239,68,68,0.15);color:#ef4444;display:flex;align-items:center;justify-content:center;">
+            <i class="bi bi-exclamation-triangle-fill" style="font-size:1.1rem;"></i>
+          </div>
+          <div>
+            <h5 class="fw-bold mb-0 text-white" style="font-size:1rem;">Tindakan Destruktif</h5>
+            <small style="color:#cbd5e1;font-size:0.8rem;">Reset seluruh data transaksi pemasukan/pengeluaran atau atur ulang riwayat kas kelas.</small>
+          </div>
+        </div>
+        <button class="btn btn-outline-danger d-flex align-items-center gap-2"
+                data-bs-toggle="modal" data-bs-target="#modalHapusData"
+                style="border-radius:10px;font-size:0.85rem;padding:8px 18px;">
+          <i class="bi bi-trash3-fill"></i> Hapus Data
+        </button>
+      </div>
+
+      <div class="row g-3 mt-1">
+        <div class="col-md-6">
+          <div class="p-3 rounded-3" style="background:rgba(0,0,0,0.25);border:1px solid rgba(255,255,255,0.07);">
+            <div style="color:#94a3b8;font-size:0.78rem;margin-bottom:2px;">Total Transaksi Saat Ini:</div>
+            <div class="fw-bold text-white" style="font-size:1.1rem;">{{ transaksi_count }} Transaksi Tercatat</div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="p-3 rounded-3" style="background:rgba(0,0,0,0.25);border:1px solid rgba(255,255,255,0.07);">
+            <div style="color:#94a3b8;font-size:0.78rem;margin-bottom:2px;">Riwayat Iuran Terverifikasi:</div>
+            <div class="fw-bold text-white" style="font-size:1.1rem;">{{ riwayat_count }} Data Siswa Lunas</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── MODAL PANDUAN PEMBAYARAN KAS & QRIS ────────────────────── -->
+<div class="modal fade" id="modalPaymentInfo" tabindex="-1" aria-labelledby="modalPaymentInfoLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content modal-content-dark">
+      <div class="modal-header border-bottom border-gray-800">
+        <h5 class="modal-title fw-bold text-white d-flex align-items-center gap-2" id="modalPaymentInfoLabel">
+          <i class="bi bi-qr-code text-primary"></i> Panduan Pembayaran Kas Terintegrasi
+        </h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body p-4 text-center">
+        <!-- QRIS Simulation Box -->
+        <div class="p-3 rounded-4 mx-auto mb-3" style="background:#fff;display:inline-block;box-shadow:0 8px 24px rgba(0,0,0,0.4);">
+          <img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=KAS-KELAS-TIF24-{{ kelas.no_dana if kelas and kelas.no_dana else '24' }}"
+               alt="QRIS Kas Kelas" style="width:160px;height:160px;display:block;">
+        </div>
+        <div class="fw-bold text-white mb-1" style="font-size:1rem;">Scan QRIS Kas Kelas</div>
+        <div style="color:#94a3b8;font-size:0.8rem;margin-bottom:12px;">Mendukung DANA, GoPay, OVO, LinkAja, BCA, dan Seluruh Mobile Banking</div>
+        <div class="badge bg-success py-2 px-3 mb-3" style="font-size:0.85rem;">
+          Nominal Iuran Bulanan: Rp 5.000
+        </div>
+
+        <div class="text-start p-3 rounded-3" style="background:#0d1117;border:1px solid rgba(255,255,255,0.08);font-size:0.8rem;color:#cbd5e1;line-height:1.6;">
+          <div class="fw-semibold text-white mb-1"><i class="bi bi-info-circle text-info me-1"></i> Cara Membayar:</div>
+          1. Buka aplikasi DANA / GoPay / OVO / BRImo pada HP Anda.<br>
+          2. Masukkan nomor tujuan atau scan kode QR di atas.<br>
+          3. Masukkan nominal iuran Rp 5.000 dengan catatan: <em>Nama & NIM Anda</em>.<br>
+          4. Konfirmasi pembayaran ke bendahara kelas.
+        </div>
+      </div>
+      <div class="modal-footer border-top border-gray-800">
+        <button type="button" class="btn btn-secondary w-100" data-bs-dismiss="modal">Tutup</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── MODAL KONFIRMASI HAPUS DATA KAS KESELURUHAN ───────────── -->
+<div class="modal fade" id="modalHapusData" tabindex="-1" aria-labelledby="modalHapusDataLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content modal-content-dark" style="border:1px solid rgba(239,68,68,0.5) !important;">
+      <div class="modal-header border-bottom border-gray-800">
+        <h5 class="modal-title fw-bold text-danger d-flex align-items-center gap-2" id="modalHapusDataLabel">
+          <i class="bi bi-shield-exclamation"></i> Konfirmasi Hapus Data Keseluruhan
+        </h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <form action="{{ url_for('hapus_data_kas') }}" method="POST">
+        <div class="modal-body p-4">
+          <div class="alert alert-danger d-flex align-items-start gap-2 mb-3" style="font-size:0.82rem;border-radius:10px;">
+            <i class="bi bi-exclamation-octagon-fill" style="font-size:1.2rem;"></i>
+            <div>
+              <strong>PERINGATAN KERAS!</strong> Tindakan ini akan menghapus data transaksi dari database MySQL secara permanen.
+            </div>
+          </div>
+
+          <p style="color:#cbd5e1;font-size:0.85rem;margin-bottom:12px;">
+            Pilih komponen data yang ingin Anda hapus / atur ulang:
+          </p>
+
+          <div class="form-check mb-2">
+            <input class="form-check-input" type="checkbox" name="hapus_transaksi" id="checkHapusTransaksi" checked>
+            <label class="form-check-label text-white" for="checkHapusTransaksi" style="font-size:0.85rem;">
+              Hapus Seluruh Data Transaksi (Pemasukan & Pengeluaran)
+            </label>
+            <div style="color:#94a3b8;font-size:0.75rem;">Saldo kas kelas akan otomatis di-reset menjadi Rp 0.</div>
+          </div>
+
+          <div class="form-check mb-3">
+            <input class="form-check-input" type="checkbox" name="hapus_riwayat" id="checkHapusRiwayat" checked>
+            <label class="form-check-label text-white" for="checkHapusRiwayat" style="font-size:0.85rem;">
+              Reset Riwayat Iuran Anggota Kelas
+            </label>
+            <div style="color:#94a3b8;font-size:0.75rem;">Status seluruh iuran siswa dikembalikan menjadi 'Belum Lunas'.</div>
+          </div>
+
+          <div class="p-3 rounded-3 mb-3" style="background:#0d1117;border:1px solid rgba(255,255,255,0.1);">
+            <label class="form-label text-warning fw-semibold" style="font-size:0.82rem;">
+              Ketik kata <span class="badge bg-danger">HAPUS</span> di bawah ini untuk konfirmasi:
+            </label>
+            <input type="text" name="konfirmasi" class="form-control form-control-dark"
+                   placeholder="Ketik HAPUS di sini" id="inputKonfirmasiHapus" required autocomplete="off">
+          </div>
+        </div>
+        <div class="modal-footer border-top border-gray-800">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batalkan</button>
+          <button type="submit" class="btn btn-danger d-flex align-items-center gap-2">
+            <i class="bi bi-trash3-fill"></i> Ya, Hapus Data Sekarang
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── Theme Selection ──────────────────────────────────────────
+function selectTheme(theme) {
+  applyTheme(theme, true);
+  showToast(
+    theme === 'dark'
+      ? 'Mode Gelap aktif! Nuansa OLED elegan dengan seluruh teks putih.'
+      : 'Mode Terang aktif! Nuansa smooth di mata dengan seluruh teks hitam.',
+    'success'
+  );
+}
+
+// Inisialisasi tampilan theme card saat load
+document.addEventListener('DOMContentLoaded', () => {
+  const current = localStorage.getItem('theme') || "{{ current_theme }}" || 'dark';
+  updatePengaturanThemeCards(current);
+});
+
+// ── Copy E-Wallet Number with Interactive Toast Feedback ─────
+function copyEwalletNumber(name, number) {
+  if (!number || number.trim() === '') {
+    showToast('Nomor akun ' + name + ' belum diisi!', 'warning');
+    return;
+  }
+  navigator.clipboard.writeText(number.trim()).then(() => {
+    showToast('Nomor ' + name + ' (' + number.trim() + ') berhasil disalin ke clipboard! 📋', 'success');
+  }).catch(() => {
+    // Fallback copy
+    const tempInput = document.createElement('input');
+    tempInput.value = number.trim();
+    document.body.appendChild(tempInput);
+    tempInput.select();
+    document.execCommand('copy');
+    document.body.removeChild(tempInput);
+    showToast('Nomor ' + name + ' berhasil disalin!', 'success');
+  });
+}
+
+function showToast(message, type) {
+  const toastEl = document.getElementById('actionToast');
+  const toastMsg = document.getElementById('toastMessage');
+  if (toastEl && toastMsg) {
+    toastMsg.innerHTML = '<i class="bi bi-check-circle-fill me-1"></i> ' + message;
+    toastEl.className = 'toast align-items-center text-white border-0 ' + (type === 'warning' ? 'bg-warning' : 'bg-success');
+    const toast = new bootstrap.Toast(toastEl, { delay: 3500 });
+    toast.show();
+  } else {
+    alert(message);
+  }
+}
+
+function openPaymentModal() {
+  const modal = new bootstrap.Modal(document.getElementById('modalPaymentInfo'));
+  modal.show();
+}
+
+// ── Notification Sound Synthesizer / Player ──────────────────
+function playNotificationSound() {
+  const soundName = "{{ kelas.notification_sound if kelas and kelas.notification_sound else '' }}";
+  
+  if (soundName && soundName.startsWith('sound_custom_')) {
+    // Play custom uploaded MP3
+    const audio = new Audio('/static/uploads/audio/' + soundName);
+    audio.play().catch(e => {
+      console.log('Audio playback fallback:', e);
+      playWebAudioBeep();
+    });
+  } else {
+    // Play beautiful synthesized web audio chime
+    playWebAudioBeep();
+  }
+}
+
+function playWebAudioBeep() {
+  try {
+    const AudioContext = window.AudioContext || window.webkitAudioContext;
+    if (!AudioContext) return;
+    const ctx = new AudioContext();
+    
+    // Suara Chime Elegan (2 nada bertingkat)
+    const now = ctx.currentTime;
+    const osc1 = ctx.createOscillator();
+    const gain1 = ctx.createGain();
+    osc1.type = 'sine';
+    osc1.frequency.setValueAtTime(587.33, now); // D5
+    gain1.gain.setValueAtTime(0.3, now);
+    gain1.gain.exponentialRampToValueAtTime(0.001, now + 0.5);
+    osc1.connect(gain1);
+    gain1.connect(ctx.destination);
+    osc1.start(now);
+    osc1.stop(now + 0.5);
+
+    const osc2 = ctx.createOscillator();
+    const gain2 = ctx.createGain();
+    osc2.type = 'sine';
+    osc2.frequency.setValueAtTime(880, now + 0.15); // A5
+    gain2.gain.setValueAtTime(0.35, now + 0.15);
+    gain2.gain.exponentialRampToValueAtTime(0.001, now + 0.8);
+    osc2.connect(gain2);
+    gain2.connect(ctx.destination);
+    osc2.start(now + 0.15);
+    osc2.stop(now + 0.8);
+  } catch (err) {
+    console.error(err);
+  }
+}
+</script>
+{% endblock %}

@@ -1,0 +1,299 @@
+{% extends 'base.html' %}
+{% block title %}Profil Saya & Pengaturan{% endblock %}
+
+{% block content %}
+<div class="page-header fade-in fade-in-1">
+  <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+    <div>
+      <h1 class="h3 fw-bold mb-1">Profil Saya</h1>
+      <p class="text-muted mb-0" style="font-size:0.875rem;">Kelola informasi profil, foto, pengaturan akun, dan kustomisasi info kelas.</p>
+    </div>
+    <div>
+      <button class="btn btn-sm btn-outline-secondary" onclick="window.location.reload()">
+        <i class="bi bi-arrow-clockwise me-1"></i> Refresh
+      </button>
+    </div>
+  </div>
+</div>
+
+<div class="row g-4">
+  <!-- ── KOLOM KIRI: KARTU PROFIL & FOTO ──────────────────────── -->
+  <div class="col-lg-4 fade-in fade-in-1">
+    <div class="glass-card p-4 text-center">
+      <!-- Avatar Upload Wrapper (Klik foto atau ikon kamera untuk memilih dari perangkat) -->
+      <div class="avatar-upload-wrapper mx-auto mb-3" style="cursor: pointer;" onclick="document.getElementById('inputFotoProfil').click()" title="Klik untuk ganti foto profil">
+        <div class="avatar-xl" id="avatarPreviewBox">
+          {% if session['user'].get('foto_profil') %}
+            <img src="{{ url_for('static', filename='uploads/avatars/' + session['user']['foto_profil']) }}" alt="Foto Profil" id="avatarImg">
+          {% else %}
+            <span id="avatarInitial">{{ session['user']['avatar'] }}</span>
+          {% endif %}
+        </div>
+        <!-- Trigger file upload dari perangkat -->
+        <label for="inputFotoProfil" class="avatar-upload-badge" title="Ganti Foto Profil dari Perangkat" onclick="event.stopPropagation()">
+          <i class="bi bi-camera-fill"></i>
+        </label>
+      </div>
+
+      <!-- Form Upload Foto (Submit otomatis saat file dipilih) -->
+      <form id="formUploadFoto" action="{{ url_for('upload_foto') }}" method="POST" enctype="multipart/form-data">
+        <input type="file" id="inputFotoProfil" name="foto_profil" accept="image/*" class="d-none" onchange="handleFotoUpload(this)">
+      </form>
+
+      <h2 style="font-size:1.15rem;font-weight:700;margin:0 0 4px;color:var(--text-primary);">{{ session['user']['nama'] }}</h2>
+      <p style="font-size:0.8rem;color:var(--text-secondary);margin:0 0 12px;">{{ session['user']['email'] or 'Belum ada email' }}</p>
+
+      <div class="d-flex justify-content-center gap-2 mb-3">
+        <span class="custom-badge {% if session['user']['role'] == 'admin' %}badge-lunas{% else %}badge-masuk{% endif %}"
+              style="font-size:0.78rem;padding:5px 14px;">
+          <i class="bi bi-{{ 'shield-check' if session['user']['role'] == 'admin' else 'person-badge' }} me-1"></i>
+          {{ session['user']['role']|capitalize }}
+        </span>
+        <span class="custom-badge" style="background:rgba(52,211,153,0.15);color:#10b981;font-size:0.78rem;padding:5px 14px;">
+          ● Aktif
+        </span>
+      </div>
+
+      <hr style="border-color:var(--border);margin:16px 0;">
+
+      <!-- Data Ringkas Akun -->
+      <div class="d-flex flex-column gap-2 text-start">
+        <div class="d-flex justify-content-between align-items-center py-1 border-bottom" style="border-color:var(--border)!important;">
+          <span style="font-size:0.78rem;color:var(--text-muted);"><i class="bi bi-upc-scan me-1"></i> NIM</span>
+          <span style="font-size:0.85rem;font-weight:600;color:var(--text-primary);">{{ session['user'].get('nim') or (anggota.nim if anggota else '—') }}</span>
+        </div>
+        <div class="d-flex justify-content-between align-items-center py-1 border-bottom" style="border-color:var(--border)!important;">
+          <span style="font-size:0.78rem;color:var(--text-muted);"><i class="bi bi-mortarboard me-1"></i> Kelas</span>
+          <span style="font-size:0.85rem;font-weight:600;color:var(--text-primary);">{{ kelas.nama_kelas if kelas else session['user'].get('kelas', 'B') }}</span>
+        </div>
+        <div class="d-flex justify-content-between align-items-center py-1 border-bottom" style="border-color:var(--border)!important;">
+          <span style="font-size:0.78rem;color:var(--text-muted);"><i class="bi bi-diagram-3 me-1"></i> Jurusan</span>
+          <span style="font-size:0.85rem;font-weight:600;color:var(--text-primary);">{{ kelas.jurusan if kelas else 'Teknik Informatika' }}</span>
+        </div>
+        <div class="d-flex justify-content-between align-items-center py-1">
+          <span style="font-size:0.78rem;color:var(--text-muted);"><i class="bi bi-calendar-event me-1"></i> Angkatan</span>
+          <span style="font-size:0.85rem;font-weight:600;color:var(--text-primary);">{{ kelas.angkatan if kelas else '2024/24' }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── KOLOM KANAN: INFO KELAS & PENGATURAN AKUN ─────────────── -->
+  <div class="col-lg-8 fade-in fade-in-2">
+    <!-- 1. INFO KELAS (CUSTOMIZABLE DENGAN FORMAT PERSIS) -->
+    <div class="glass-card p-4 mb-4">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <div class="section-title mb-0 d-flex align-items-center gap-2">
+          <i class="bi bi-buildings text-primary"></i> Info Kelas
+        </div>
+        <button class="btn btn-sm btn-outline-primary d-flex align-items-center gap-1"
+                data-bs-toggle="modal" data-bs-target="#modalEditKelas"
+                style="border-radius:8px;font-size:0.8rem;padding:6px 12px;">
+          <i class="bi bi-pencil-square"></i> Ubah Info Kelas
+        </button>
+      </div>
+
+      <!-- Tampilan Susunan Info Kelas Sesuai Permintaan User -->
+      <div class="info-kelas-box">
+        <div class="info-row-item">
+          <div class="info-label">kelas</div>
+          <div class="info-colon">:</div>
+          <div class="info-value">{{ kelas.nama_kelas if kelas else 'B' }}</div>
+        </div>
+        <div class="info-row-item">
+          <div class="info-label">jurusan</div>
+          <div class="info-colon">:</div>
+          <div class="info-value">{{ kelas.jurusan if kelas else 'Teknik Informatika' }}</div>
+        </div>
+        <div class="info-row-item">
+          <div class="info-label">Angkatan</div>
+          <div class="info-colon">:</div>
+          <div class="info-value">{{ kelas.angkatan if kelas else '2024/24' }}</div>
+        </div>
+        <div class="info-row-item">
+          <div class="info-label">no dana</div>
+          <div class="info-colon">:</div>
+          <div class="info-value">
+            <span class="badge d-inline-flex align-items-center" style="background:rgba(56,189,248,0.15);color:#38bdf8;font-size:0.9rem;font-weight:600;padding:6px 12px;border:1px solid rgba(56,189,248,0.3);border-radius:8px;">
+              <img src="{{ url_for('static', filename='img/ewallet/dana.png') }}" alt="DANA" style="width:18px;height:18px;border-radius:50%;margin-right:6px;background:#fff;object-fit:contain;">
+              {{ kelas.no_dana if kelas and kelas.no_dana else '+62123456' }}
+            </span>
+          </div>
+        </div>
+      </div>
+      <div class="text-end mt-2">
+        <small class="text-muted" style="font-size:0.75rem;">
+          <i class="bi bi-info-circle me-1"></i> Klik <strong>Ubah Info Kelas</strong> jika ingin menyesuaikan nama kelas, jurusan, angkatan, atau no dana.
+        </small>
+      </div>
+    </div>
+
+    <!-- 2. PENGATURAN AKUN -->
+    <div class="glass-card p-4 mb-4">
+      <div class="section-title mb-1 d-flex align-items-center gap-2">
+        <i class="bi bi-gear-fill text-primary"></i> Pengaturan Akun
+      </div>
+      <p class="text-muted mb-4" style="font-size:0.8rem;">Sesuaikan identitas diri, NIM, kontak, atau email yang terhubung dengan akun Anda.</p>
+
+      <form action="{{ url_for('update_akun') }}" method="POST">
+        <div class="row g-3">
+          <!-- Nama Lengkap -->
+          <div class="col-md-6">
+            <label class="form-label" style="font-size:0.8rem;color:var(--text-muted);font-weight:500;">
+              Nama Lengkap
+            </label>
+            <input type="text" name="nama" class="form-control form-control-dark"
+                   value="{{ user.nama_lengkap if user else session['user']['nama'] }}" required>
+          </div>
+
+          <!-- NIM -->
+          <div class="col-md-6">
+            <label class="form-label" style="font-size:0.8rem;color:var(--text-muted);font-weight:500;">
+              NIM (Nomor Induk Mahasiswa)
+            </label>
+            <input type="text" name="nim" class="form-control form-control-dark"
+                   value="{{ anggota.nim if anggota else session['user'].get('nim', '') }}" required>
+          </div>
+
+          <!-- Email -->
+          <div class="col-md-6">
+            <label class="form-label" style="font-size:0.8rem;color:var(--text-muted);font-weight:500;">
+              Alamat Email
+            </label>
+            <input type="email" name="email" class="form-control form-control-dark"
+                   value="{{ user.email if user else (session['user'].get('email') or '') }}">
+          </div>
+
+          <!-- Nomor WhatsApp / Telepon -->
+          <div class="col-md-6">
+            <label class="form-label" style="font-size:0.8rem;color:var(--text-muted);font-weight:500;">
+              Nomor WhatsApp / HP
+            </label>
+            <input type="text" name="phone" class="form-control form-control-dark"
+                   placeholder="08123456789"
+                   value="{{ anggota.phone if anggota and anggota.phone else '' }}">
+          </div>
+        </div>
+
+        <div class="d-flex justify-content-end mt-4">
+          <button type="submit" class="btn btn-primary d-flex align-items-center gap-2" style="border-radius:10px;padding:8px 20px;">
+            <i class="bi bi-check2-circle"></i> Simpan Perubahan Akun
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- 3. RINGKASAN IURAN & AKSI CEPAT -->
+    <div class="glass-card p-4">
+      <div class="section-title mb-3 d-flex align-items-center gap-2">
+        <i class="bi bi-wallet text-primary"></i> Ringkasan Iuran & Aksi
+      </div>
+      <div class="row g-3 mb-4">
+        <div class="col-sm-6">
+          <div style="background:var(--bg-base);border-radius:12px;padding:16px;border:1px solid var(--border);">
+            <div style="font-size:0.75rem;color:var(--text-secondary);margin-bottom:4px;">Total Iuran Terbayar</div>
+            <div style="font-size:1.3rem;font-weight:700;color:var(--primary);">
+              Rp {{ "{:,.0f}".format(total).replace(",",".") }}
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-6">
+          <div style="background:var(--bg-base);border-radius:12px;padding:16px;border:1px solid var(--border);">
+            <div style="font-size:0.75rem;color:var(--text-secondary);margin-bottom:4px;">Bulan Lunas</div>
+            <div style="font-size:1.3rem;font-weight:700;color:#60a5fa;">{{ lunas }} Bulan</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="d-flex gap-2 flex-wrap">
+        <a href="{{ url_for('iuran') }}" class="btn-ghost d-flex align-items-center gap-2" style="border-radius:10px;">
+          <i class="bi bi-cash-coin"></i> Bayar / Cek Iuran Saya
+        </a>
+        <a href="{{ url_for('transaksi') }}" class="btn-ghost d-flex align-items-center gap-2" style="border-radius:10px;">
+          <i class="bi bi-receipt"></i> Riwayat Kas Kelas
+        </a>
+        <a href="{{ url_for('logout') }}"
+           class="d-flex align-items-center gap-2 ms-auto"
+           style="background:rgba(248,81,73,0.1);border:1px solid rgba(248,81,73,0.3);color:#fc8181;
+                  font-size:0.875rem;padding:8px 16px;border-radius:10px;text-decoration:none;transition:all 0.2s;"
+           onmouseover="this.style.background='rgba(248,81,73,0.2)'"
+           onmouseout="this.style.background='rgba(248,81,73,0.1)'">
+          <i class="bi bi-box-arrow-right"></i> Logout
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── MODAL KUSTOMISASI INFO KELAS ──────────────────────────── -->
+<div class="modal fade" id="modalEditKelas" tabindex="-1" aria-labelledby="modalEditKelasLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content modal-content-dark">
+      <div class="modal-header">
+        <h5 class="modal-title fw-bold d-flex align-items-center gap-2" id="modalEditKelasLabel">
+          <i class="bi bi-sliders text-primary"></i> Kustomisasi Info Kelas
+        </h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <form action="{{ url_for('update_kelas') }}" method="POST">
+        <div class="modal-body p-4">
+          <p class="text-muted mb-3" style="font-size:0.82rem;">
+            Sesuaikan konfigurasi data kelas dan akun DANA untuk pembayaran kas.
+          </p>
+          <div class="mb-3">
+            <label class="form-label" style="font-size:0.8rem;color:var(--text-muted);">Nama Kelas</label>
+            <input type="text" name="nama_kelas" class="form-control form-control-dark"
+                   value="{{ kelas.nama_kelas if kelas else 'B' }}" required placeholder="Contoh: B">
+          </div>
+          <div class="mb-3">
+            <label class="form-label" style="font-size:0.8rem;color:var(--text-muted);">Jurusan</label>
+            <input type="text" name="jurusan" class="form-control form-control-dark"
+                   value="{{ kelas.jurusan if kelas else 'Teknik Informatika' }}" required placeholder="Contoh: Teknik Informatika">
+          </div>
+          <div class="mb-3">
+            <label class="form-label" style="font-size:0.8rem;color:var(--text-muted);">Angkatan</label>
+            <input type="text" name="angkatan" class="form-control form-control-dark"
+                   value="{{ kelas.angkatan if kelas else '2024/24' }}" required placeholder="Contoh: 2024/24">
+          </div>
+          <div class="mb-3">
+            <label class="form-label" style="font-size:0.8rem;color:var(--text-muted);">Nomor Akun DANA (e-Wallet)</label>
+            <input type="text" name="no_dana" class="form-control form-control-dark"
+                   value="{{ kelas.no_dana if kelas and kelas.no_dana else '+62123456' }}" required placeholder="+62123456">
+            <small class="text-muted" style="font-size:0.75rem;">Nomor akun DANA yang digunakan bendahara untuk menampung iuran.</small>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+          <button type="submit" class="btn btn-primary d-flex align-items-center gap-2">
+            <i class="bi bi-save"></i> Simpan Info Kelas
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+function handleFotoUpload(input) {
+  if (input.files && input.files[0]) {
+    const file = input.files[0];
+    // Check file size (max 5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      alert('Ukuran file foto maksimal 5 MB!');
+      input.value = '';
+      return;
+    }
+    // Preview image locally immediately for responsive feel
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      const previewBox = document.getElementById('avatarPreviewBox');
+      previewBox.innerHTML = '<img src="' + e.target.result + '" alt="Foto Profil" style="width:100%;height:100%;object-fit:cover;">';
+    };
+    reader.readAsDataURL(file);
+    
+    // Auto submit form to upload to server
+    document.getElementById('formUploadFoto').submit();
+  }
+}
+</script>
+{% endblock %}
